@@ -15,9 +15,9 @@ CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
 RAW="${RAW:-https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main}"
 
 STYLES=(
-  plain-english eli15 analogy-engine feynman thing-explainer ladder
+  wait-what plain-english eli15 analogy-engine feynman thing-explainer ladder
   executive smart-brevity coach
-  caveman adhd no-slop
+  caveman adhd no-slop no-ai-slop
   street gen-z sportscaster yoda bedtime-story
 )
 
