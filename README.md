@@ -144,10 +144,19 @@ Everything (installs all 17 + the style-maker skill; activate later via `/config
 curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --all
 ```
 
+**After install — 3 steps:**
+
+1. Restart Claude Code (or run `/clear`) — styles load at session start.
+2. Type `/config` and find the **Output style** setting.
+3. Pick the style you want from the list. Done — Claude answers in that voice
+   from the next message on.
+
+If you installed a single style, it's already selected — you only need step 1.
+Switching back: `/config` → **Output style** → `Default`.
+
 > [!TIP]
-> A style takes effect after restarting Claude Code or `/clear`. Switch or
-> turn off anytime: `/config` → **Output style**. The old `/output-style`
-> command was removed in v2.1.91 — most guides online are outdated.
+> The old `/output-style` command was removed in Claude Code v2.1.91 — most
+> guides online still mention it and are outdated. `/config` is the way.
 
 ## The styles
 
