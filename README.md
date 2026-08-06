@@ -56,35 +56,67 @@ it in one command.
 
 ## Before / after
 
-Real, unedited Opus 5 output from the July 2026 threads — and the same content
-through two styles from this repo:
-
-<table>
-<tr><th width="50%">🤖 Opus 5, default voice</th><th width="50%">🙂 with an output style</th></tr>
-<tr><td valign="top">
-
-> Coverage-aware cost projection: ledger-derived cost figures with exact,
-> lower-bound, and unavailable states
-
-</td><td valign="top">
-
-**`plain-english`:**
-
-> Do not show incomplete cost totals as exact. Say "at least $X" or "unknown".
-
-</td></tr>
-<tr><td valign="top">
+Real, unedited Opus 5 voice, July 2026 threads:
 
 > The reason your React component is re-rendering is likely because you're
 > creating a new object reference on each render cycle, which breaks React's
 > referential equality check, so you may want to consider memoization…
 
+The same answer, five voices:
+
+<table>
+<tr><th width="34%" align="left">Voice</th><th align="left">Same answer</th></tr>
+<tr><td valign="top">
+
+**`plain-english`**<br><sub>ASD-STE100, the Boeing-manual standard — the trick behind [Matt Pocock](https://github.com/mattpocock/skills)'s wait-what ([@mattpocockuk](https://x.com/mattpocockuk))</sub>
+
 </td><td valign="top">
 
-**`caveman`:**
+> Your component draws again on every render. Your code creates a new object
+> each time. React sees a new object and draws again. Wrap the object in
+> `useMemo`. Then React gets the same object and does not draw again.
+
+</td></tr>
+<tr><td valign="top">
+
+**`caveman`**<br><sub>after [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)), 95k★</sub>
+
+</td><td valign="top">
 
 > New object ref each render. Inline object prop = new ref = re-render. Wrap
 > in `useMemo`. Done.
+
+</td></tr>
+<tr><td valign="top">
+
+**`no-slop`**<br><sub>the school of [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) and [Peter Yang](https://github.com/petergyang/no-ai-slop) ([@petergyang](https://x.com/petergyang))</sub>
+
+</td><td valign="top">
+
+> The inline object is new on every render, and React compares props by
+> identity, not contents — so it re-renders each time. Wrap the object in
+> `useMemo` and the re-renders stop.
+
+</td></tr>
+<tr><td valign="top">
+
+**`adhd`**<br><sub>after [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd)'s i-have-adhd, 17k★</sub>
+
+</td><td valign="top">
+
+> Wrap the inline object in `useMemo` — that stops the re-renders (~2 min).
+> Why: a new object every render makes React think the prop changed.
+
+</td></tr>
+<tr><td valign="top">
+
+**`gen-z`**
+
+</td><td valign="top">
+
+> found it, no cap: you hand React a brand-new object every render, so it
+> thinks something changed and redraws. wrap it in `useMemo` and it's a
+> clean W.
 
 </td></tr>
 </table>
