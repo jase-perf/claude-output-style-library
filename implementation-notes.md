@@ -17,3 +17,10 @@
 
 ### Open questions (решены за пользователя)
 - Активация пишется в глобальный ~/.claude/settings.json (паттерн pohuy), не в project-local settings.local.json: curl-инсталлятор — пользовательский, не проектный сценарий.
+
+## 2026-08-06 (вторая итерация: виральное оформление)
+- Баннер: Magnific GPT-2 (2:1, 2k, high) со style-reference от Сергея (riso/стипплинг, крем+пыльно-голубой+коралл). Выбран вариант A (изящнее типографика), B лежит рядом как banner-alt.jpg. PNG 4.3MB пережаты в JPEG 1600w ~540KB.
+- README пересобран по чек-листу viral-репо (эталон caveman): центрированный hero → тэглайн «same brain. seventeen mouths.» → 4 flat-бейджа (каждый — ссылка) → dot-nav → позиционирование → эпиграф Gruhn → HTML-таблица before/after → ASCII stat box → install с [!TIP] → таблицы стилей с колонкой «Method · author».
+- Авторы с проверенными X-хэндлами: @mattpocockuk, @julius_brussee, @blader, @ConorBronsdon, @hvpandya, @jcotellese, @petergyang, @joshtriedcoding. Без X (не найдено — не гадаем): Ghriss, Boulegroun, Duplar Mello, Konidala, Nims, Reddy, Gruhn.
+- petergyang/no-ai-slop добавлен в каталог (кредит на репо, НЕ на платную рассылку).
+- Gotcha: social preview картинку GitHub через API не ставит — только руками в Settings → Social preview (положить banner.jpg).
