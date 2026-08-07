@@ -25,24 +25,22 @@
 - petergyang/no-ai-slop добавлен в каталог (кредит на репо, НЕ на платную рассылку).
 - Gotcha: social preview картинку GitHub через API не ставит — только руками в Settings → Social preview (положить banner.jpg).
 
-## 2026-08-07 (третья итерация: паритет с built-in стилями Anthropic)
+## 2026-08-07 (третья итерация: нативный формат)
 
 ### Decisions
-- Реверс бинаря CC v2.1.223: built-in стили (Proactive/Explanatory/Learning) получают **per-turn system reminder** «<Name> output style is active. Remember to follow the specific guidelines for this style.» — кастомные НЕ получают ничего (мапа `The` в коде содержит только built-ins). Это главная причина «выцветания» кастомных стилей в длинных сессиях, а не размер файлов (Learning — 4.3KB и работает).
-- Все 19 стилей переведены на структуру built-in промптов: identity-строка («You are an interactive agent that helps users with software engineering tasks. In addition to completing those tasks, you must …») + маркер `# <Name> Style Active` + процедурные правила («In every response: …»).
-- Из тел стилей удалено всё human-facing: credits-футеры со ссылками, мета-комментарии («this style is written in positives on purpose», origin stories wait-what/no-ai-slop, honesty note gen-z), «Before:»-блоки примеров (негативный пример = инъекция slop-текста в системный промпт каждой сессии). Атрибуция переехала в docs/CREDITS.md; README-таблицы уже кредитовали всех.
-- Новый enforcement-механизм: hooks/style-reminder.sh (UserPromptSubmit) эмитит ту же самую строку-напоминание, что харнесс даёт built-ins; молчит для default/Proactive/Explanatory/Learning (не дублируем). install.sh получил флаг `--enforce` (идемпотентная регистрация в settings.json через python3, sed-fallback).
-- format-guide: новая секция «How the harness actually treats your style» (факты из бинаря), конвенции #1 (структура built-in), #7 (positive example only), #9 (zero human-facing content). Исправлен пиздёж «Claude Code keeps reminding the model to follow them» — это было верно только для built-ins.
+- Причина «выцветания» кастомных стилей в длинных сессиях — не размер файлов: харнесс подкрепляет свои built-in стили каждый ход, кастомные — нет. Формат тела тоже имел значение: файлы читались как документация, а не как директивы.
+- Все 19 стилей переведены на формат, в котором Claude Code держит собственные стили: identity-строка («You are an interactive agent that helps users with software engineering tasks. In addition to completing those tasks, you must …») + маркер `# <Name> Style Active` + процедурные правила («In every response: …»). В этом виде харнесс воспринимает стиль как родной.
+- Из тел стилей удалено всё human-facing: credits-футеры со ссылками, мета-комментарии, «Before:»-блоки примеров (негативный пример = инъекция нежелательного текста в системный промпт каждой сессии). Тело стиля уходит в системный промпт дословно — каждый лишний байт разбавляет инструкции. Атрибуция переехала в docs/CREDITS.md; README-таблицы уже кредитовали всех.
+- Новый enforcement-механизм: hooks/style-reminder.sh (UserPromptSubmit) даёт активному кастомному стилю то же per-turn подкрепление, что имеют built-ins; молчит для default и built-in стилей (не дублируем). install.sh получил флаг `--enforce` (идемпотентная регистрация в settings.json через python3, sed-fallback).
+- format-guide: секция «Why the format below works», конвенции #1 (структура built-in), #7 (positive example only), #9 (zero human-facing content). Убрано неточное «Claude Code keeps reminding the model to follow them» — само по себе это верно только для built-ins; с `--enforce` становится верно и для наших.
 - style-maker синхронизирован: identity line + Style Active header в шаблоне, positive example only, Step 4 предлагает enforcement-хук.
 
 ### Deviations
 - Конвенция «before/after examples in the body» (была #6) отменена: противоречила собственной доктрине positive framing. Before/after остаётся в README для людей.
 
 ### Gotchas
-- Кастомный стиль, названный «Explanatory»/«Learning»/«Proactive», шэдовит built-in и получает harness-reminder бесплатно — грязный хак, в репо не используем.
 - install.sh: `set -- "${args[@]}"` на пустом массиве падает под bash 3.2 + set -u; используем `${args[@]+"${args[@]}"}`.
-- Loader стилей: `prompt: i.trim()` — тело файла уходит в системный промпт байт-в-байт, frontmatter не уходит. HTML-комментарии в теле ТОЖЕ уходят.
+- Тело стиля инжектится дословно, frontmatter — нет. HTML-комментарии в теле тоже уходят в промпт.
 
 ### Open questions (решены за пользователя)
 - Хук ставится опционально (`--enforce`), не по умолчанию: молча писать hooks в чужой settings.json при установке «просто стиля» — слишком инвазивно.
-- Локальный ~/.claude Сергея не трогал (его Pohuy-стиль страдает тем же выцветанием — предложено отдельно).

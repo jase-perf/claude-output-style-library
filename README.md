@@ -180,12 +180,10 @@ Switching back: `/config` → **Output style** → `Default`.
 
 ### Make it stick: `--enforce`
 
-Claude Code reminds itself about its **built-in** styles every single turn
-("Explanatory output style is active. Remember to follow…") — but never about
+Claude Code reinforces its **built-in** styles every single turn — but never
 custom ones, so custom voices fade over a long session. Add `--enforce` to any
-install command and a tiny
-[`UserPromptSubmit` hook](hooks/style-reminder.sh) replicates that exact
-reminder for whatever style you have active:
+install command and a tiny [`UserPromptSubmit` hook](hooks/style-reminder.sh)
+gives whatever style you have active the same per-turn reinforcement:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15 --enforce

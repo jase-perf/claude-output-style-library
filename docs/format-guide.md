@@ -40,32 +40,24 @@ The old `/output-style` command was removed in v2.1.91. Today:
 A style is part of the system prompt, read once at session start — it takes
 effect after you restart Claude Code or run `/clear`.
 
-## How the harness actually treats your style
+## Why the format below works
 
-Facts extracted from the Claude Code binary, because they shape every
-convention below:
+An active style is injected into the system prompt verbatim, in the same slot
+where Claude Code keeps its own built-in styles (Explanatory, Learning,
+Proactive). Styles written in the built-ins' exact shape — an identity line,
+a `# <Name> Style Active` marker, procedural condition→action rules — read
+as native to the harness; styles written like documentation get treated like
+documentation. Two practical consequences:
 
-1. **Injection.** With a style active, the system prompt opens with "You are
-   an interactive agent that helps users according to your 'Output Style'
-   below…" and your file's body is appended as `# Output Style: <name>`.
-   The body goes in verbatim — every byte you write is a byte of system
-   prompt, so credits, links, and commentary for humans are dead weight that
-   dilutes the instructions.
-2. **Built-in styles get a per-turn reminder; custom styles get nothing.**
-   Every turn, Claude Code injects "`<Name> output style is active. Remember
-   to follow the specific guidelines for this style.`" — but only for its
-   built-in styles (Proactive, Explanatory, Learning). A custom style is
-   injected once and never reinforced, which is why custom voices fade in
-   long sessions. Our installer's `--enforce` flag closes the gap: it
-   registers [hooks/style-reminder.sh](../hooks/style-reminder.sh) as a
-   `UserPromptSubmit` hook that emits the exact same reminder line for the
-   active custom style.
-3. **Built-in styles are written as machine directives**, not prose about a
-   voice: an identity line ("You are an interactive CLI tool that helps users
-   with software engineering tasks. In addition to…"), a `# <Name> Style
-   Active` marker header, and procedural condition→action rules with exact
-   output templates. Styles that read like documentation get treated like
-   documentation.
+- Every byte of the body is a byte of system prompt. Credits, links, and
+  commentary for humans dilute the instructions — they belong in the README,
+  not in the style.
+- The harness reinforces its built-in styles every turn; a custom style is
+  injected once per session, which is why custom voices fade in long
+  conversations. The installer's `--enforce` flag closes the gap: it
+  registers [hooks/style-reminder.sh](../hooks/style-reminder.sh) as a
+  `UserPromptSubmit` hook that gives the active custom style the same
+  per-turn reinforcement.
 
 ## Why an output style and not CLAUDE.md
 
@@ -82,8 +74,8 @@ too.
 1. **Mirror the built-in structure.** Body starts with the identity line —
    "You are an interactive agent that helps users with software engineering
    tasks. In addition to completing those tasks, you must …" — followed by a
-   `# <Name> Style Active` header, then the rules. This matches the register
-   of the surrounding system prompt and the wording of the per-turn reminder.
+   `# <Name> Style Active` header, then the rules. Claude Code reads this
+   shape as one of its own.
 2. **`keep-coding-instructions: true`.** These styles change the voice, not
    the engineering.
 3. **Specs, not adjectives.** "Clearly" is an opinion; "no sentence over 20
