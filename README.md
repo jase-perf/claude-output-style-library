@@ -32,10 +32,13 @@
 
 ---
 
-Output styles are the right layer for fixing Claude's voice: they modify the
-system prompt itself, and Claude Code keeps reminding the model to follow them
-— unlike CLAUDE.md rules, which are injected once and decay over a long
-session. Every style here is one markdown file with correct 2026 frontmatter,
+Output styles are the right layer for fixing Claude's voice: they rewrite the
+system prompt itself and reframe the agent's identity around your voice —
+unlike CLAUDE.md rules, which are injected as context alongside everything
+else. Every style here mirrors the exact structure of Anthropic's built-in
+styles (identity line, `Style Active` marker, procedural rules), and the
+optional `--enforce` hook gives them the same per-turn reminder the built-ins
+get from the harness. One markdown file each, correct 2026 frontmatter,
 MIT-licensed, with the original author credited in the table below.
 
 ## Why
@@ -175,6 +178,23 @@ Switching back: `/config` → **Output style** → `Default`.
 > The old `/output-style` command was removed in Claude Code v2.1.91 — most
 > guides online still mention it and are outdated. `/config` is the way.
 
+### Make it stick: `--enforce`
+
+Claude Code reminds itself about its **built-in** styles every single turn
+("Explanatory output style is active. Remember to follow…") — but never about
+custom ones, so custom voices fade over a long session. Add `--enforce` to any
+install command and a tiny
+[`UserPromptSubmit` hook](hooks/style-reminder.sh) replicates that exact
+reminder for whatever style you have active:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15 --enforce
+```
+
+The hook is silent for built-in styles (no double reminders) and for
+`default`. Remove it anytime by deleting the entry from
+`~/.claude/settings.json` → `hooks.UserPromptSubmit`.
+
 ## The styles
 
 ### Understand — for explaining to humans
@@ -292,15 +312,17 @@ it — and helps the credited authors get found too. ⭐
 ## Contributing
 
 PRs welcome. One style per PR, following
-[docs/format-guide.md](docs/format-guide.md): named methodology with credits,
-countable specs, positive framing, the shared guardrails block, one
-before/after example, a verify clause. If you're the original author of a
-methodology we adapted and want changes — open an issue, you outrank us.
+[docs/format-guide.md](docs/format-guide.md): built-in prompt structure
+(identity line, `Style Active` header), countable specs, positive framing,
+the shared guardrails block, one positive example, a verify clause, credits
+in [docs/CREDITS.md](docs/CREDITS.md) — not in the style body. If you're the
+original author of a methodology we adapted and want changes — open an issue,
+you outrank us.
 
 ## License
 
 [MIT](LICENSE). Adapted styles preserve their sources' copyright notices; see
-credit lines in each style file.
+[docs/CREDITS.md](docs/CREDITS.md) and the catalog tables above.
 
 ---
 

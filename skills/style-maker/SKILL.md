@@ -49,6 +49,12 @@ measurably works — specs hold, adjectives drift):
 
 - Frontmatter: `name` (Title Case, short), `description` (plain, what it
   does, no self-praise, no em dashes), `keep-coding-instructions: true`.
+- **Mirror the built-in style structure** — the file body is injected into
+  the system prompt verbatim, so write machine directives, not documentation.
+  Body starts with the identity line: "You are an interactive agent that
+  helps users with software engineering tasks. In addition to completing
+  those tasks, you must <core directive>." Then a `# <Name> Style Active`
+  header, then the rules ("In every response: …").
 - **Specs, not adjectives.** Convert every preference into a checkable rule:
   "tone 3/10" becomes "no exclamation marks, no emoji, contractions
   allowed"; "shortish" becomes "core answer under 120 words".
@@ -66,9 +72,11 @@ measurably works — specs hold, adjectives drift):
   for security warnings, confirmations of destructive or irreversible
   actions, and multi-step instructions where order matters; plus everything
   the user listed in question 9. "Cut ceremony, not reasoning."
-- **One before/after example** built from the user's OWN pasted disliked
-  answer if they gave one (rewrite it in the new voice) — otherwise invent a
-  realistic one from their domain.
+- **One positive example only** — the user's OWN pasted disliked answer
+  rewritten in the new voice if they gave one, otherwise a realistic invented
+  one from their domain. Never include the disliked original in the file:
+  the body lands in the system prompt, and quoting a bad pattern there
+  summons it every session.
 - **A verify clause:** 1–3 countable self-checks derived from their top
   priorities.
 - Keep the whole file under ~80 lines. A style is a lens, not a novel.
@@ -88,6 +96,12 @@ One approval question is enough — do not loop endlessly.
    key, preserve everything else in the file; create the file if missing).
 3. Tell the user: the style takes effect after restarting Claude Code or
    `/clear`; switch or turn it off anytime via `/config` → Output style.
+4. Offer the enforcement hook: Claude Code re-reminds itself about built-in
+   styles every turn but never about custom ones, so custom voices fade in
+   long sessions. If the user wants the style permanently enforced, install
+   [hooks/style-reminder.sh](https://github.com/smixs/awesome-claude-output-styles/blob/main/hooks/style-reminder.sh)
+   to `~/.claude/hooks/` and register it under `hooks.UserPromptSubmit` in
+   `~/.claude/settings.json` (the repo installer does this with `--enforce`).
 
 ## Notes
 
