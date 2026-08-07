@@ -9,6 +9,11 @@
 #
 # List available styles:
 #   curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --list
+#
+# Add --enforce to also install a UserPromptSubmit hook that re-reminds Claude
+# of the active style every turn (Claude Code only does this for built-in
+# styles; custom styles fade in long sessions without it):
+#   ... | bash -s -- eli15 --enforce
 set -euo pipefail
 
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
@@ -22,8 +27,9 @@ STYLES=(
 )
 
 usage() {
-  echo "Usage: install.sh <style> [<style>...] | --all | --list"
+  echo "Usage: install.sh <style> [<style>...] [--enforce] | --all [--enforce] | --list"
   echo "Styles: ${STYLES[*]} style-maker"
+  echo "--enforce: install a per-turn reminder hook so the style never fades"
 }
 
 fetch() { # fetch <remote-path> <local-path>
@@ -45,6 +51,35 @@ install_style_maker() {
   mkdir -p "$CLAUDE_DIR/skills/style-maker"
   fetch "skills/style-maker/SKILL.md" "$CLAUDE_DIR/skills/style-maker/SKILL.md"
   echo "installed: skills/style-maker (run it by asking Claude to \"make my output style\")"
+}
+
+install_enforce_hook() {
+  mkdir -p "$CLAUDE_DIR/hooks"
+  fetch "hooks/style-reminder.sh" "$CLAUDE_DIR/hooks/style-reminder.sh"
+  chmod +x "$CLAUDE_DIR/hooks/style-reminder.sh"
+  local settings="$CLAUDE_DIR/settings.json"
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - "$settings" "$CLAUDE_DIR/hooks/style-reminder.sh" <<'PY'
+import json, os, sys
+path, cmd = sys.argv[1], sys.argv[2]
+data = {}
+if os.path.exists(path):
+    with open(path) as f:
+        data = json.load(f)
+hooks = data.setdefault("hooks", {}).setdefault("UserPromptSubmit", [])
+entry = {"hooks": [{"type": "command", "command": cmd}]}
+if not any(h.get("command") == cmd
+           for group in hooks for h in group.get("hooks", [])):
+    hooks.append(entry)
+with open(path, "w") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+    f.write("\n")
+PY
+    echo "installed: hooks/style-reminder.sh (per-turn style reminder, registered in $settings)"
+  else
+    echo "python3 not found. Register the hook manually in $settings:"
+    echo '  {"hooks":{"UserPromptSubmit":[{"hooks":[{"type":"command","command":"'"$CLAUDE_DIR"'/hooks/style-reminder.sh"}]}]}}'
+  fi
 }
 
 activate() { # activate <style-file>
@@ -79,6 +114,14 @@ SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-/dev/null}")" 2>/dev/null && pwd ||
 
 [ $# -ge 1 ] || { usage; exit 1; }
 
+ENFORCE=0
+args=()
+for a in "$@"; do
+  if [ "$a" = "--enforce" ]; then ENFORCE=1; else args+=("$a"); fi
+done
+set -- ${args[@]+"${args[@]}"}
+[ $# -ge 1 ] || { usage; exit 1; }
+
 case "$1" in
   --list)
     printf '%s\n' "${STYLES[@]}" style-maker
@@ -87,6 +130,7 @@ case "$1" in
   --all)
     for s in "${STYLES[@]}"; do install_style "$s"; done
     install_style_maker
+    [ "$ENFORCE" = 1 ] && install_enforce_hook
     echo
     echo "All styles installed. Pick one: /config -> Output style (takes effect after restart or /clear)."
     exit 0
@@ -110,6 +154,8 @@ for s in "${requested[@]}"; do
   [ "$found" = 1 ] || { echo "unknown style: $s"; usage; exit 1; }
   install_style "$s"
 done
+
+[ "$ENFORCE" = 1 ] && install_enforce_hook
 
 # Exactly one style requested -> make it the active style.
 if [ ${#requested[@]} -eq 1 ] && [ "${requested[0]}" != "style-maker" ]; then
