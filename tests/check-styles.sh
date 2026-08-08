@@ -80,6 +80,16 @@ for f in "$STYLE_DIR"/*.md; do
   printf '%s' "$b" | grep -q '^## Guardrails' \
     || fail "$slug: body must contain a '## Guardrails' section"
 
+  # These files are increasingly written by agents that return the whole file as
+  # a string, and an agent's own tool-call framing can ride along on the end of
+  # that string. It happened: plain-english.md shipped with '</full_file_content>'
+  # and '</invoke>' as its last two lines, and every structural check above still
+  # passed, because trailing junk breaks no heading and busts no byte ceiling.
+  # The body is a system prompt, so anything that is not an instruction is a bug.
+  if printf '%s' "$b" | grep -q '</invoke>\|<invoke \|</function_calls>\|<function_calls>\|<parameter name=\|full_file_content\|</antml'; then
+    fail "$slug: body contains agent tool-call markup. Strip it -- this text goes into the system prompt verbatim."
+  fi
+
   # --- the guardrail invariant --------------------------------------------
   # Wording is deliberately per-style; the protections are not optional.
   g=$(printf '%s' "$b" | sed -n '/^## Guardrails/,/^## /p')

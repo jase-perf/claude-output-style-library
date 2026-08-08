@@ -59,5 +59,3 @@ synonym?
 ## Core directive
 
 One fact per sentence, in the project's own words, clear on the first read.
-</full_file_content>
-</invoke>
