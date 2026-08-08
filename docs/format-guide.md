@@ -83,9 +83,40 @@ too.
    words" is a spec. Every rule should be checkable: it either happened or it
    didn't. Frame rules as triggers where possible: "In every response…",
    "When challenged, …".
-4. **Positive framing.** Describe the voice you want and show examples of it.
-   Long lists of banned words summon the banned words. One or two negative
-   rules maximum, and only when there is no positive equivalent.
+4. **Positive framing — for a reason that survives checking.** Describe the
+   voice you want and show an example of it. Anthropic's own prompting
+   guidance says so directly, under the heading *Control the format of
+   responses*: "**Tell Claude what to do instead of what not to do**" — with a
+   worked example that is itself a style rule ("Do not use markdown in your
+   response" → "Your response should be composed of smoothly flowing prose
+   paragraphs"). Output styles are formatting and voice instructions, which is
+   exactly the slot that guidance sits in.
+
+   **What this guide used to say, and why it was wrong.** It claimed "long
+   lists of banned words summon the banned words", and capped negative rules
+   at "one or two maximum". The cap had no source. The claim has been measured
+   once, in Castricato et al., *Suppressing Pink Elephants with Direct
+   Principle Feedback* ([arXiv:2402.07896](https://arxiv.org/abs/2402.07896)),
+   Table 1 — rate of mentioning the forbidden topic, base → with prohibition:
+
+   | Model | Base | Prohibited | Effect |
+   |---|---|---|---|
+   | OpenHermes-7B | 0.33 | 0.36 | backfires, +3pp |
+   | OpenHermes-13B | 0.34 | 0.34 | none |
+   | Llama-2-13B-Chat | 0.33 | 0.25 | helps |
+   | GPT-4 | 0.33 | 0.13 | helps most, −61% relative |
+
+   The effect exists only in the weakest model tested and reverses with
+   capability. Prefer positive framing because it is first-party guidance and
+   because a described target is more directly actionable than a list of
+   things to avoid — not because prohibitions backfire on a frontier model.
+   They do not. Keep a prohibition wherever it states the constraint most
+   exactly, and keep every safety prohibition unconditionally.
+
+   When flipping a rule to positive, hold force and specificity constant:
+   "no sentence over 20 words" → "every sentence stays under 20 words", not
+   "prefer short sentences". Losing the number is a downgrade; losing the
+   "never" is not.
 5b. **Guardrails first, and give the rules their own `## Rules` heading.**
    Instruction adherence shows a measured primacy bias — earlier instructions
    are followed better — and the guardrails are the rules whose silent omission

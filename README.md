@@ -2,7 +2,7 @@
   <img src="docs/assets/banner.jpg" alt="awesome-claude-output-styles" width="720">
 </p>
 
-<h1 align="center">awesome-claude-output-styles</h1>
+<h1 align="center">Claude Output Style Library</h1>
 
 <p align="center">
   <strong>same brain. twelve mouths.</strong>
@@ -15,47 +15,38 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/smixs/awesome-claude-output-styles/stargazers"><img src="https://img.shields.io/github/stars/smixs/awesome-claude-output-styles?style=flat&color=yellow" alt="stars"></a>
+  <a href="https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml"><img src="https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="#the-styles"><img src="https://img.shields.io/badge/styles-12_across_3_tiers-orange?style=flat" alt="12 styles"></a>
-  <a href="https://github.com/smixs/awesome-claude-output-styles/commits/main"><img src="https://img.shields.io/github/last-commit/smixs/awesome-claude-output-styles?style=flat" alt="last commit"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/smixs/awesome-claude-output-styles?style=flat" alt="license"></a>
+  <a href="#how-this-library-is-built">
+    <img src="https://img.shields.io/badge/every_style-adversarially_reviewed-blue?style=flat" alt="adversarially reviewed"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/jase-perf/claude-output-style-library?style=flat" alt="license"></a>
 </p>
 
 <p align="center">
   <a href="#before--after">See it</a> ·
   <a href="#install">Install</a> ·
-  <a href="#whats-different-in-this-fork">Fork changes</a> ·
+  <a href="#how-this-library-is-built">How it's built</a> ·
   <a href="#the-styles">The styles</a> ·
   <a href="#make-your-own-style-maker">Make your own</a> ·
   <a href="#shared-design-rules">Design rules</a> ·
-  <a href="#the-wider-catalog">Catalog</a>
+  <a href="#credit-where-this-came-from">Credit</a>
 </p>
 
 ---
 
 > [!NOTE]
-> **This is a fork of [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).**
-> The styles, the format guide, and the original design are their work — see
-> [docs/CREDITS.md](docs/CREDITS.md).
+> **This library began as a fork of
+> [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles)
+> by Serge Shima, and owes it the original idea, the format guide, and the first
+> draft of most styles here.** It has since diverged enough to stand on its own:
+> 19 styles became 12, every one of them rewritten against a spec that did not
+> exist upstream, plus a Windows installer, a bug fix in the enforce hook, four
+> test suites and CI across three operating systems.
 >
-> **This fork is curated for professional use.** Upstream ships 19 styles; the
-> five persona styles (`street`, `gen-z`, `sportscaster`, `yoda`,
-> `bedtime-story`) are not carried here. They are good work and still available
-> upstream — they just do not fit a library meant for work contexts. `caveman`
-> stays: terse-technical is an established practice, not a bit.
->
-> **Added in this fork:** Windows support — [`install.ps1`](install.ps1) and
-> [`hooks/style-reminder.ps1`](hooks/style-reminder.ps1) — plus a fix so the
-> enforce hook resolves the active style through Claude Code's real settings
-> precedence rather than the user-level file alone (it now respects a style set
-> per-project by `/config`). Both changes are in
-> [`style-reminder.sh`](hooks/style-reminder.sh) too, so macOS and Linux get the
-> fix as well.
->
-> The install commands below fetch from this fork. The badges, credits, "Sister
-> project", and issue links all still point upstream.
->
-> Full detail: [What's different in this fork](#whats-different-in-this-fork).
+> Every adapted method keeps its author's name and, where one exists, their MIT
+> copyright notice — all ten checked against the upstream `LICENSE` file they
+> came from. See [docs/CREDITS.md](docs/CREDITS.md) and
+> [Credit: where this came from](#credit-where-this-came-from).
 
 Output styles are the right layer for fixing Claude's voice: they rewrite the
 system prompt itself and reframe the agent's identity around your voice —
@@ -330,15 +321,116 @@ Every style in this hub follows the same conventions
 
 - **Specs, not adjectives.** "No sentence over 20 words" is checkable;
   "be clear" is not.
-- **Positive framing.** Styles describe the voice they want. Ban lists summon
-  the banned patterns — so the [Claudism list](docs/claudisms-2026.md) lives
-  in docs for humans, not inside prompts.
+- **Positive framing.** Styles describe the voice they want, following
+  Anthropic's own guidance to "tell Claude what to do instead of what not to
+  do". The [Claudism list](docs/claudisms-2026.md) lives in docs for humans,
+  where it is useful, rather than spending system-prompt budget inside every
+  session. (This library used to justify that with "ban lists summon the
+  banned patterns". That turns out to be false for frontier models —
+  see [how this library is built](#how-this-library-is-built).)
 - **Byte-exact guardrails.** Code, commands, error messages, file paths, and
   numbers are never stylized. Every persona shuts off for security warnings,
   destructive-action confirmations, and order-critical instructions.
 - **Cut ceremony, not reasoning.** Styles shrink the wrapper, never the
   "why".
 - `keep-coding-instructions: true` everywhere — the engineering stays intact.
+
+## How this library is built
+
+A style file is not documentation. Its body is injected verbatim into the
+system prompt at session start, so every byte is a byte of system prompt in
+every turn. That raises the cost of a sloppy line well above what a normal
+markdown file carries, and it is why this library is built the way it is.
+
+### Every style is machine-checked
+
+[`tests/check-styles.sh`](tests/check-styles.sh) enforces the invariants that
+used to rest on the author's discipline alone. It runs in CI on Ubuntu, macOS
+and Windows, alongside three more suites covering the installers and the
+enforce hook.
+
+| The check | Why it exists |
+| --- | --- |
+| Guardrails carry all four carve-outs | A style whose guardrails silently dropped the destructive-action clause would install and run exactly like a correct one |
+| `## Rules` has its own heading | Otherwise the guardrails section runs on, swallows the rules, and the four carve-out checks can be satisfied by rule text instead |
+| Body under 3000 characters | Instruction adherence degrades as a system prompt grows; the ceiling forces the trade to be made deliberately |
+| Frontmatter `name` slugifies to the filename | If they disagree, `install.sh <slug>` activates a style the user cannot then find in `/config` |
+| No agent tool-call markup in the body | One style shipped with `</invoke>` as its last line and passed CI, because no structural check looks at what a line contains |
+| Every style has a credit entry | Attribution cannot rot silently |
+
+### Every style is adversarially reviewed
+
+Styles are drafted, then reviewed by an independent agent whose brief is to
+find what the author got wrong. Reviewers must build a sandbox copy of the
+repo, run the suite in it, count the body themselves, and diff against the
+previous version for deletions the author failed to declare — an approval
+without those artifacts does not count.
+
+That process has caught, among others: a rewrite that changed a verify clause
+from "at most one concept per answer" to "exactly one", removing permission
+for a short factual reply; a safety carve-out quietly narrowed from
+"multi-step instructions" to "order-critical multi-step instructions"; and a
+fabricated claim about React `useMemo` that would otherwise have entered the
+system prompt of every session.
+
+Merging two styles works the same way in reverse. Before either merge in this
+library, an adversary was tasked with **refuting** it — writing the answer each
+style would give to the same prompt and showing the two differ. Six merges were
+proposed across four independent analyses. Five were refuted and survive as
+separate files. One survived the attempt and was merged.
+
+### What the research actually supports
+
+Design decisions here draw on published work where published work exists. Being
+straight about which is which:
+
+- **Positive framing is first-party guidance.** Anthropic's prompting
+  documentation says, under *Control the format of responses*: "**Tell Claude
+  what to do instead of what not to do**", with a worked example that is
+  itself a style rule. Output styles are formatting and voice instructions, so
+  this is directly on point. It is guidance, not a measurement — the page
+  reports no experiment or effect size.
+- **The reason usually given for that guidance is false at the frontier, and
+  this library used to repeat it.** The claim "ban lists summon the banned
+  words" has been measured once, in *Suppressing Pink Elephants with Direct
+  Principle Feedback* ([arXiv:2402.07896](https://arxiv.org/abs/2402.07896)),
+  Table 1. The prohibition backfired only in the weakest model tested
+  (OpenHermes-7B, 0.33 → 0.36) and helped most in the strongest (GPT-4,
+  0.33 → 0.13 — a 61% relative reduction). The effect reverses with
+  capability. The guidance still stands on its own merits; the folk
+  justification does not, and
+  [docs/format-guide.md](docs/format-guide.md) now says so.
+- **Simplification to the lowest reading levels is where models fail.**
+  *Analysing Zero-Shot Readability-Controlled Sentence Simplification*
+  ([arXiv:2409.20246](https://arxiv.org/abs/2409.20246), accepted at COLING
+  2025) reports that "all tested models struggle to simplify sentences
+  (especially to the lowest levels)". This is why `ladder`'s bottom rung and
+  `thing-explainer`'s word constraint carry countable self-checks rather than
+  trusting the instruction to hold.
+- **Consulted, with no claim resting on them:**
+  [arXiv:2505.00679](https://arxiv.org/abs/2505.00679) on register-analysis
+  prompting and [arXiv:2606.05716](https://arxiv.org/abs/2606.05716) on
+  interpreting style representations. Both are preprints whose commonly-cited
+  findings could not be confirmed from their abstracts, so nothing here is
+  built on them.
+
+Every citation above was checked against the source, not against a summary of
+it: the Anthropic quote by fetching the page, the Pink Elephants table by
+extracting the rendered paper, the COLING quote from the published abstract.
+Two claims that reached this repo from research notes were dropped at that
+step because they did not survive it.
+
+Everything else — the Minto Pyramid, ASD-STE100, the Feynman technique, Smart
+Brevity — is **established practice, not measured effect**. Those methods have
+decades of use behind them and are credited to their authors in
+[docs/CREDITS.md](docs/CREDITS.md). They are not evidence that this library's
+implementations of them work better than the alternatives.
+
+**What is not claimed:** no benchmark shows these styles produce measurably
+better output than an unstyled Claude. The tests verify structure, the reviews
+verify craft, and the citations support specific design choices. None of that
+is an efficacy result, and calling it one would be the exact failure the
+`no-slop` style exists to prevent.
 
 ## The wider catalog
 
@@ -383,19 +475,30 @@ style that started this collection. Same guardrails, four roots, 18+.
 If one of these voices saved you a re-read, a star helps the next person find
 it — and helps the credited authors get found too. ⭐
 
-## What's different in this fork
+## Credit: where this came from
 
-Upstream is [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).
-The style *text* is unchanged — the differences are curation and tooling.
+This library started as a fork of
+[smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles)
+by Serge Shima. The idea, the format guide, and the first draft of most styles
+here are that project's work, and it is still actively worth reading.
+
+What has changed since:
 
 | | Upstream | Here |
 | --- | --- | --- |
 | Styles | 19, across 4 tiers | 12, across 3 — persona tier dropped, two pairs merged |
+| Style bodies | original text | all 12 rewritten against the spec below |
 | Windows install | `install.sh` only | [`install.ps1`](install.ps1) |
 | Windows enforce hook | — | [`style-reminder.ps1`](hooks/style-reminder.ps1) |
 | Hook reads style from | `~/.claude/settings.json` | full settings precedence |
 | Line endings | per-contributor `core.autocrlf` | pinned by [`.gitattributes`](.gitattributes) |
-| CI | — | invariant tests on 3 OSes |
+| Tests | — | 4 suites, run on 3 OSes in CI |
+| MIT notices | 6 | 10, each checked against its upstream `LICENSE` |
+
+Every method keeps its author. Where the upstream project it came from carries
+an MIT copyright notice, that notice is reproduced verbatim in
+[LICENSE](LICENSE) and [docs/CREDITS.md](docs/CREDITS.md), and CI fails if a
+style has no credit entry.
 
 ### 0. Curated for professional use
 
@@ -407,8 +510,6 @@ reads as serious or it doesn't. They remain available upstream, unmodified.
 `caveman` stays despite the name: compressed technical fragments are a real
 practice with a real readership, and its guardrails are as strict as any other
 style's.
-
-No style's *text* was edited. This is a subtraction, not a rewrite.
 
 ### 1. A real Windows installer
 
