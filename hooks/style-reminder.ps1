@@ -39,9 +39,13 @@ try {
     $userDir = if ($env:CLAUDE_DIR) { $env:CLAUDE_DIR } else { Join-Path $env:USERPROFILE '.claude' }
 
     # Highest precedence first: local beats project beats user.
+    # Nested Join-Path, not '.claude\settings.json': a backslash is an ordinary
+    # filename character on macOS/Linux, so the one-string form would look for a
+    # single file literally named ".claude\settings.json" under pwsh there.
+    $projectClaude = Join-Path $cwd '.claude'
     $candidates = @(
-        (Join-Path $cwd '.claude\settings.local.json'),
-        (Join-Path $cwd '.claude\settings.json'),
+        (Join-Path $projectClaude 'settings.local.json'),
+        (Join-Path $projectClaude 'settings.json'),
         (Join-Path $userDir 'settings.json')
     )
 

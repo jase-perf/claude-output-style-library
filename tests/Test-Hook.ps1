@@ -20,18 +20,25 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$hook = Join-Path $PSScriptRoot '..\hooks\style-reminder.ps1'
+# Nested Join-Path throughout: '\' is an ordinary filename character on
+# macOS/Linux, so single-string paths like 'a\b.json' would name one weird file.
+$hook = Join-Path (Join-Path (Split-Path $PSScriptRoot -Parent) 'hooks') 'style-reminder.ps1'
 if (-not (Test-Path -LiteralPath $hook)) { Write-Error "not found: $hook"; exit 1 }
 $hook = (Resolve-Path $hook).Path
 
 $tmp = Join-Path ([IO.Path]::GetTempPath()) ("stylehook-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 $proj = Join-Path $tmp 'proj'
-$homeDir = Join-Path $tmp 'home\.claude'
-New-Item -ItemType Directory -Force (Join-Path $proj '.claude') | Out-Null
+$homeDir = Join-Path (Join-Path $tmp 'home') '.claude'
+$projClaude = Join-Path $proj '.claude'
+New-Item -ItemType Directory -Force $projClaude | Out-Null
 New-Item -ItemType Directory -Force $homeDir | Out-Null
 
-$projSettings = Join-Path $proj '.claude\settings.json'
-$projLocal = Join-Path $proj '.claude\settings.local.json'
+# powershell.exe exists only on Windows; every other platform has pwsh. Probing
+# beats checking $IsWindows, which does not exist at all on PS 5.1.
+$psExe = if (Get-Command powershell.exe -ErrorAction SilentlyContinue) { 'powershell.exe' } else { 'pwsh' }
+
+$projSettings = Join-Path $projClaude 'settings.json'
+$projLocal = Join-Path $projClaude 'settings.local.json'
 $userSettings = Join-Path $homeDir 'settings.json'
 
 $script:pass = 0
@@ -42,7 +49,7 @@ function Invoke-Hook {
     $env:CLAUDE_DIR = $homeDir
     # -File is safe here: an absolute path, so the ~-expansion caveat that
     # applies to the registered hook command does not bite.
-    $out = $Stdin | & powershell.exe -NoProfile -File $hook 2>&1
+    $out = $Stdin | & $psExe -NoProfile -File $hook 2>&1
     ($out | Out-String).Trim()
 }
 
@@ -110,14 +117,14 @@ Test-Case 'silent when no settings.json exists' '' (Invoke-Hook (Get-Payload))
 
 # --- exit code is always 0 --------------------------------------------------
 Set-Json $userSettings '{"outputStyle":"No Slop"}'
-Get-Payload | & powershell.exe -NoProfile -File $hook > $null 2>&1
+Get-Payload | & $psExe -NoProfile -File $hook > $null 2>&1
 Test-Case 'exit 0 on the happy path' '0' "$LASTEXITCODE"
 
-'garbage' | & powershell.exe -NoProfile -File $hook > $null 2>&1
+'garbage' | & $psExe -NoProfile -File $hook > $null 2>&1
 Test-Case 'exit 0 on garbage stdin' '0' "$LASTEXITCODE"
 
 [IO.File]::Delete($userSettings)
-Get-Payload | & powershell.exe -NoProfile -File $hook > $null 2>&1
+Get-Payload | & $psExe -NoProfile -File $hook > $null 2>&1
 Test-Case 'exit 0 with no settings at all' '0' "$LASTEXITCODE"
 
 $env:CLAUDE_DIR = $null

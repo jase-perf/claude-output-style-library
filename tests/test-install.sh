@@ -37,12 +37,12 @@ echo "install.sh"
 
 # --- --list -----------------------------------------------------------------
 n_disk=$(for f in output-styles/*.md; do echo "$f"; done | wc -l | tr -d " ")
-n_list=$(sh install.sh --list | wc -l | tr -d ' ')
+n_list=$(bash install.sh --list | wc -l | tr -d ' ')
 check "--list reports every style + style-maker" "$((n_disk + 1))" "$n_list"
 
 # --- single style installs and activates ------------------------------------
 D="$TMP/single"
-CLAUDE_DIR="$D" sh install.sh caveman >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh caveman >/dev/null 2>&1
 check "single style installs and exits 0" "0" "$?"
 check "single style file installed" "yes" "$([ -f "$D/output-styles/caveman.md" ] && echo yes || echo no)"
 if [ "$HAVE_PY" = 1 ]; then
@@ -54,7 +54,7 @@ fi
 
 # --- --all installs everything, activates nothing ---------------------------
 D="$TMP/all"
-CLAUDE_DIR="$D" sh install.sh --all >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh --all >/dev/null 2>&1
 check "--all installs every style" "$n_disk" \
   "$(n=0; for f in "$D"/output-styles/*.md; do [ -e "$f" ] && n=$((n + 1)); done; echo "$n")"
 check "--all installs style-maker" "yes" "$([ -f "$D/skills/style-maker/SKILL.md" ] && echo yes || echo no)"
@@ -62,7 +62,7 @@ check "--all activates nothing" "" "$(sed -n 's/.*"outputStyle"[[:space:]]*:[[:s
 
 # --- unknown style is rejected ----------------------------------------------
 D="$TMP/bogus"
-CLAUDE_DIR="$D" sh install.sh definitely-not-a-style >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh definitely-not-a-style >/dev/null 2>&1
 check "unknown style exits non-zero" "1" "$?"
 
 # --- the merge must not eat an existing config ------------------------------
@@ -79,7 +79,7 @@ cat > "$D/settings.json" <<'JSON'
   "effortLevel": "xhigh"
 }
 JSON
-CLAUDE_DIR="$D" sh install.sh eli15 --enforce >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
 # The style file always installs; only the settings.json edit needs python3.
 check "merge run installs the style" "yes" \
   "$([ -f "$D/output-styles/eli15.md" ] && echo yes || echo no)"
@@ -94,8 +94,8 @@ if [ "$HAVE_PY" = 1 ]; then
     "$(grep -q 'UserPromptSubmit' "$D/settings.json" && echo yes || echo no)"
 
   # --- re-running must not duplicate the hook -------------------------------
-  CLAUDE_DIR="$D" sh install.sh eli15 --enforce >/dev/null 2>&1
-  CLAUDE_DIR="$D" sh install.sh eli15 --enforce >/dev/null 2>&1
+  CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
+  CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
   check "hook registered exactly once after 3 runs" "1" \
     "$(grep -c 'style-reminder.sh' "$D/settings.json" | tr -d ' ')"
 else
@@ -106,7 +106,7 @@ else
   check "no-python run leaves settings.json intact" "yes" \
     "$(grep -q 'echo hi' "$D/settings.json" && echo yes || echo no)"
   check "no-python run still exits 0" "0" \
-    "$(CLAUDE_DIR="$D" sh install.sh eli15 --enforce >/dev/null 2>&1; echo $?)"
+    "$(CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1; echo $?)"
 fi
 
 printf '\n%s passed, %s failed, %s skipped\n' "$pass" "$fail" "$skip"

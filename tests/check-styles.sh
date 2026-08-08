@@ -105,14 +105,18 @@ done
 printf '\nInstaller lists\n'
 disk=$(for f in "$STYLE_DIR"/*.md; do basename "$f" .md; done | sort | tr '\n' ' ')
 
-sh_list=$(sed -n '/^STYLES=(/,/^)/p' install.sh | sed '1d;$d' | tr -s ' \n' ' ' | tr ' ' '\n' | sed '/^$/d' | sort | tr '\n' ' ')
+# tr -d '\r' is required, not defensive: .gitattributes checks install.ps1 out
+# as CRLF on every platform, and GNU sed (unlike Git Bash's) leaves the CR in
+# place -- so each name would carry a trailing CR, fail the comparison, and
+# then mangle the error message by returning the cursor to column 0.
+sh_list=$(sed -n '/^STYLES=(/,/^)/p' install.sh | sed '1d;$d' | tr -d '\r' | tr -s ' \n' ' ' | tr ' ' '\n' | sed '/^$/d' | sort | tr '\n' ' ')
 [ "$sh_list" = "$disk" ] || fail "install.sh STYLES does not match $STYLE_DIR/ (got: $sh_list)"
 
 # commas -> newlines FIRST, then strip quotes/space; deleting commas outright
 # concatenates every name into one token.
 # shellcheck disable=SC2016  # $STYLES is a literal PowerShell variable in the
 # pattern being matched, not a shell expansion -- single quotes are correct.
-ps_list=$(sed -n '/^\$STYLES = @(/,/^)/p' install.ps1 | sed '1d;$d' | tr ',' '\n' | tr -d " '" | sed '/^$/d' | sort | tr '\n' ' ')
+ps_list=$(sed -n '/^\$STYLES = @(/,/^)/p' install.ps1 | sed '1d;$d' | tr -d '\r' | tr ',' '\n' | tr -d " '" | sed '/^$/d' | sort | tr '\n' ' ')
 [ "$ps_list" = "$disk" ] || fail "install.ps1 \$STYLES does not match $STYLE_DIR/ (got: $ps_list)"
 
 # --- every style is credited ------------------------------------------------
