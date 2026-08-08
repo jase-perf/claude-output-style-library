@@ -10,12 +10,19 @@ corresponding style files". They do not, and have not since the credit lines
 were moved out of the style bodies so the prompts stay pure instructions --
 see docs/format-guide.md. docs/CREDITS.md is the authoritative location.)
 
+Each line below is reproduced as that project's own LICENSE file states it. Where
+a notice uses a handle, docs/CREDITS.md gives the person's name alongside it.
+
 - Copyright (c) 2026 Matt Pocock (mattpocock/skills)
-- Copyright (c) Julius Brussee (JuliusBrussee/caveman)
-- Copyright (c) Carlos Duplá (carlosduplar/caveman-output-style-claude-code)
-- Copyright (c) ayghri (ayghri/i-have-adhd)
-- Copyright (c) Amin Boulegroun (AminBlg/SimpleEnglish)
-- Copyright (c) Peter Yang (petergyang/no-ai-slop)
+- Copyright (c) 2026 Julius Brussee (JuliusBrussee/caveman)
+- Copyright (c) 2026 Carlos Mello (carlosduplar/caveman-output-style-claude-code)
+- Copyright (c) 2026 Ayoub Ghriss (ayghri/i-have-adhd)
+- Copyright (c) 2026 AminBlg (AminBlg/SimpleEnglish)
+- Copyright (c) 2026 Peter Yang (petergyang/no-ai-slop)
+- Copyright (c) 2025 Siqi Chen (blader/humanizer)
+- Copyright (c) 2026 Conor Bronsdon (conorbronsdon/avoid-ai-writing)
+- Copyright (c) 2025 Hardik Pandya (hardikpandya/stop-slop)
+- Copyright (c) 2025 Sruthi Reddy (sruthir28/enterprise-ai-skills)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

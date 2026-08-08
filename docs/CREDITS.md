@@ -8,16 +8,21 @@ longer carry credit lines, so there is nowhere else for them to live.
 
 ## Copyright notices preserved under MIT
 
-Reproduced from [LICENSE](../LICENSE). Each holder's work is adapted by the
-style named in brackets.
+Reproduced from [LICENSE](../LICENSE), each verbatim as that project's own
+LICENSE file states it. Where the notice uses a handle, the person's name
+follows in parentheses. The bracket names the style that adapts the work.
 
 - Copyright (c) 2026 Serge Shima (`smixs`) — this collection
 - Copyright (c) 2026 Matt Pocock ([mattpocock/skills](https://github.com/mattpocock/skills)) — [`wait-what`]
-- Copyright (c) Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`caveman`]
-- Copyright (c) Carlos Duplá ([carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`caveman`]
-- Copyright (c) Ayoub Ghriss (`ayghri`, [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)) — [`adhd`]
-- Copyright (c) Amin Boulegroun ([AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)) — [`plain-english`]
-- Copyright (c) Peter Yang ([petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)) — [`no-ai-slop`]
+- Copyright (c) 2026 Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`caveman`]
+- Copyright (c) 2026 Carlos Mello (Carlos Duplar Mello, [carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`caveman`]
+- Copyright (c) 2026 Ayoub Ghriss ([ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)) — [`adhd`]
+- Copyright (c) 2026 AminBlg (Amin Boulegroun, [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)) — [`plain-english`]
+- Copyright (c) 2026 Peter Yang ([petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)) — [`no-ai-slop`]
+- Copyright (c) 2025 Siqi Chen ([blader/humanizer](https://github.com/blader/humanizer)) — [`no-slop`]
+- Copyright (c) 2026 Conor Bronsdon ([conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing)) — [`no-slop`]
+- Copyright (c) 2025 Hardik Pandya ([hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop)) — [`coach`]
+- Copyright (c) 2025 Sruthi Reddy ([sruthir28/enterprise-ai-skills](https://github.com/sruthir28/enterprise-ai-skills)) — [`executive`]
 
 ## People credited below who appear elsewhere only as repo handles
 

@@ -52,4 +52,6 @@ In every response:
 Answer in first sentence? Any sentence that would fit unchanged in a different
 conversation — cut it.
 
+## Core directive
+
 Few word when few word do. Many word when truth need many.

@@ -61,4 +61,6 @@ In every response:
 Does the response reach its answer before any supporting detail? Are there three
 supporting reasons or fewer?
 
+## Core directive
+
 Answer first, reasons beneath, decision named — every time.
