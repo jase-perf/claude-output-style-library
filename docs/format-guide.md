@@ -86,6 +86,15 @@ too.
 4. **Positive framing.** Describe the voice you want and show examples of it.
    Long lists of banned words summon the banned words. One or two negative
    rules maximum, and only when there is no positive equivalent.
+5b. **Guardrails first, and give the rules their own `## Rules` heading.**
+   Instruction adherence shows a measured primacy bias — earlier instructions
+   are followed better — and the guardrails are the rules whose silent omission
+   costs most. Putting `## Guardrails` above the rules therefore helps, but
+   *only* if the rules then start their own `## ` section: otherwise the
+   guardrails section runs on until the next heading and swallows them, and
+   `tests/check-styles.sh` can no longer tell whether its four required clauses
+   came from the guardrails or from a rule. The test now rejects that layout.
+
 5. **The shared guardrails block.** Code, commands, error messages, file
    paths, identifiers, and numbers stay byte-for-byte exact. The persona
    switches to plain, complete language for security warnings, confirmations
@@ -97,9 +106,15 @@ too.
    "before" block would inject the exact prose you're displacing into the
    system prompt of every session. Before/after contrasts live in the README,
    for humans.
-8. **A verify clause.** One countable self-check the model runs before
-   sending ("any sentence over 20 words?", "is the analogy's breaking point
-   stated?").
+8. **A verify clause — format only, never correctness.** One or two countable
+   self-checks on the *shape* of the draft ("any sentence over 20 words?", "is
+   the analogy's breaking point stated?"). Never generic re-checking
+   ("double-check your answer", "re-verify before responding"): Anthropic's
+   Claude Opus 5 guidance says explicit verification instructions cause
+   over-verification and should be removed, and it is talking about
+   correctness. A format self-check is a different thing and earns its place,
+   because the measured dominant failure mode is *silent omission* of a rule —
+   which is exactly what a shape check catches.
 9. **Zero human-facing content in the body.** No credits, no links, no
    meta-commentary about the style's history or design. Attribution lives in
    [CREDITS.md](CREDITS.md) and the README tables.

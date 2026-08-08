@@ -2,8 +2,30 @@
 
 Full attribution for every adapted style. These lines used to live inside the
 style files; they moved here so the prompts stay pure instructions (see
-[format-guide.md](format-guide.md)). Adapted styles preserve their sources'
-copyright notices per MIT.
+[format-guide.md](format-guide.md)). **This file is the authoritative location
+for the copyright notices MIT requires be preserved** — the style bodies no
+longer carry credit lines, so there is nowhere else for them to live.
+
+## Copyright notices preserved under MIT
+
+Reproduced from [LICENSE](../LICENSE). Each holder's work is adapted by the
+style named in brackets.
+
+- Copyright (c) 2026 Serge Shima (`smixs`) — this collection
+- Copyright (c) 2026 Matt Pocock ([mattpocock/skills](https://github.com/mattpocock/skills)) — [`wait-what`]
+- Copyright (c) Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`caveman`]
+- Copyright (c) Carlos Duplá ([carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`caveman`]
+- Copyright (c) Ayoub Ghriss (`ayghri`, [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)) — [`adhd`]
+- Copyright (c) Amin Boulegroun ([AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)) — [`plain-english`]
+- Copyright (c) Peter Yang ([petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)) — [`no-ai-slop`]
+
+## People credited below who appear elsewhere only as repo handles
+
+Named here so attribution does not depend on a reader resolving a GitHub slug
+to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
+(`@ConorBronsdon`), **Joe Cotellese**, **Sruthi Reddy** (`sruthir28`),
+**Hardik Pandya** (`@hvpandya`), **Eric Evans** (*Domain-Driven Design*),
+**Reijnierse et al.** (JCOM 2025).
 
 ## Understand
 

@@ -2,9 +2,13 @@ MIT License
 
 Copyright (c) 2026 Serge Shima
 
-Some styles adapt ideas and text from MIT-licensed projects; their copyright
-notices are preserved in the credit lines of the corresponding style files
-and in README credits:
+Some styles adapt ideas and text from MIT-licensed projects. Their copyright
+notices are preserved in docs/CREDITS.md and in the README credit tables.
+
+(Earlier wording claimed these notices lived "in the credit lines of the
+corresponding style files". They do not, and have not since the credit lines
+were moved out of the style bodies so the prompts stay pure instructions --
+see docs/format-guide.md. docs/CREDITS.md is the authoritative location.)
 
 - Copyright (c) 2026 Matt Pocock (mattpocock/skills)
 - Copyright (c) Julius Brussee (JuliusBrussee/caveman)

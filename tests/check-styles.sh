@@ -83,6 +83,19 @@ for f in "$STYLE_DIR"/*.md; do
   # --- the guardrail invariant --------------------------------------------
   # Wording is deliberately per-style; the protections are not optional.
   g=$(printf '%s' "$b" | sed -n '/^## Guardrails/,/^## /p')
+
+  # The extraction runs to the next '## ' heading, so a layout that puts
+  # Guardrails above the rules WITHOUT giving the rules their own heading makes
+  # this region swallow them -- and then the four keyword checks below can be
+  # satisfied by rule text instead of by the guardrails. That silently guts the
+  # only safety check in this file, so bound the region explicitly.
+  gchars=$(printf '%s' "$g" | wc -c | tr -d ' ')
+  if [ "$gchars" -gt 1000 ]; then
+    fail "$slug: Guardrails section is $gchars chars -- it has swallowed another section. Give the following section its own '## ' heading."
+  fi
+  if printf '%s' "$g" | grep -qE '^[0-9]+\.|^In every response'; then
+    fail "$slug: numbered rules are inside the Guardrails section. Give them their own '## ' heading so the guardrail checks cannot be satisfied by rule text."
+  fi
   printf '%s' "$g" | grep -qi 'byte-for-byte\|byte-exact' \
     || fail "$slug: Guardrails must keep code/paths/numbers byte-exact"
   printf '%s' "$g" | grep -qi 'security' \
