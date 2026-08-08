@@ -1,0 +1,20 @@
+# Line endings are enforced here rather than left to each contributor's
+# core.autocrlf. Without this file, editing install.sh on a Windows machine
+# whose git has autocrlf=false commits CRLF, and every macOS/Linux user then
+# gets "bad interpreter: /bin/sh^M".
+
+# Normalise everything to LF in the repository by default.
+* text=auto
+
+# Shell scripts MUST stay LF in the working tree too -- a CR before the
+# newline is part of the shebang as far as the kernel is concerned.
+*.sh text eol=lf
+
+# PowerShell is CRLF-tolerant; use the Windows-native convention.
+*.ps1 text eol=crlf
+
+# Never touch the README/doc imagery.
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary

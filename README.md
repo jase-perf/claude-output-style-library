@@ -147,6 +147,8 @@ The same answer, six voices:
 
 ## Install
 
+### macOS / Linux
+
 One style (installs **and** activates it):
 
 ```bash
@@ -158,6 +160,51 @@ Everything (installs all 19 + the style-maker skill; activate later via `/config
 ```bash
 curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --all
 ```
+
+### Windows (PowerShell)
+
+Windows has its own installer, [`install.ps1`](install.ps1) — same interface,
+no dependencies. It uses only built-in PowerShell: no curl, no bash, no python.
+
+One style (installs **and** activates it):
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style eli15
+```
+
+Everything:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -All
+```
+
+From a local clone, it's just `.\install.ps1 -All` (add `-List` to see the
+names, `-Enforce` for the hook below).
+
+> [!NOTE]
+> The `& ([scriptblock]::Create(...))` wrapper is how a remote script receives
+> arguments. Plain `irm ... | iex` runs too, but `iex` cannot forward
+> parameters — it will just print usage.
+
+<details>
+<summary><b>Why not just run <code>install.sh</code> under Git Bash or WSL?</b></summary>
+
+Because on a typical Windows box it fails twice, both times silently:
+
+- **`bash` on PATH is usually WSL**, where `$HOME` is `/home/<user>` — not
+  `C:\Users\<user>`. The installer copies 19 files into the WSL filesystem,
+  where Claude Code for Windows will never look, and reports success.
+- **`python3` is usually a 0-byte Microsoft Store stub.** It satisfies
+  `command -v python3`, so the installer takes the python branch — and then
+  the call exits 9009. Activation never happens, but the script has already
+  printed its progress.
+
+`install.ps1` has neither dependency. It edits `settings.json` through
+PowerShell's own JSON support, backs the file up to `settings.json.bak` first,
+and merges rather than overwrites — existing hooks, permissions, and plugins
+are preserved.
+
+</details>
 
 **After install — 3 steps.** Styles only load at session start, so nothing
 changes until you **restart Claude Code**:
@@ -181,17 +228,38 @@ Switching back: `/config` → **Output style** → `Default`.
 ### Make it stick: `--enforce`
 
 Claude Code reinforces its **built-in** styles every single turn — but never
-custom ones, so custom voices fade over a long session. Add `--enforce` to any
-install command and a tiny [`UserPromptSubmit` hook](hooks/style-reminder.sh)
-gives whatever style you have active the same per-turn reinforcement:
+custom ones, so custom voices fade over a long session. Add the enforce flag to
+any install command and a tiny `UserPromptSubmit` hook gives whatever style you
+have active the same per-turn reinforcement:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15 --enforce
 ```
 
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style eli15 -Enforce
+```
+
+macOS/Linux get [`style-reminder.sh`](hooks/style-reminder.sh); Windows gets
+[`style-reminder.ps1`](hooks/style-reminder.ps1). Both behave identically.
+
 The hook is silent for built-in styles (no double reminders) and for
 `default`. Remove it anytime by deleting the entry from
 `~/.claude/settings.json` → `hooks.UserPromptSubmit`.
+
+**It follows the same settings precedence Claude Code does** —
+`<project>/.claude/settings.local.json`, then `<project>/.claude/settings.json`,
+then `~/.claude/settings.json` — reading the project directory from the hook's
+own stdin payload. This matters because `/config` writes your output style to
+the **project's** `settings.local.json`, not the user-level file. A hook that
+read only `~/.claude/settings.json` would sit inside a project that had
+overridden the style and cheerfully reinforce the global one every turn, which
+is worse than no reminder at all.
+
+It costs roughly 17 tokens per turn: the reminder names the active style, it
+does not re-inject the style body (that already lives in the system prompt).
+Every code path exits 0 — a missing, half-written, or malformed settings file
+degrades to the next one down, never to a broken turn.
 
 ## The styles
 

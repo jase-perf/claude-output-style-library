@@ -54,8 +54,9 @@ documentation. Two practical consequences:
   not in the style.
 - The harness reinforces its built-in styles every turn; a custom style is
   injected once per session, which is why custom voices fade in long
-  conversations. The installer's `--enforce` flag closes the gap: it
-  registers [hooks/style-reminder.sh](../hooks/style-reminder.sh) as a
+  conversations. The installer's enforce flag closes the gap: it registers
+  [style-reminder.sh](../hooks/style-reminder.sh) (macOS/Linux) or
+  [style-reminder.ps1](../hooks/style-reminder.ps1) (Windows) as a
   `UserPromptSubmit` hook that gives the active custom style the same
   per-turn reinforcement.
 

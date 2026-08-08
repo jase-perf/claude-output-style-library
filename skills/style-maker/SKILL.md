@@ -99,9 +99,16 @@ One approval question is enough — do not loop endlessly.
 4. Offer the enforcement hook: Claude Code re-reminds itself about built-in
    styles every turn but never about custom ones, so custom voices fade in
    long sessions. If the user wants the style permanently enforced, install
-   [hooks/style-reminder.sh](https://github.com/smixs/awesome-claude-output-styles/blob/main/hooks/style-reminder.sh)
-   to `~/.claude/hooks/` and register it under `hooks.UserPromptSubmit` in
-   `~/.claude/settings.json` (the repo installer does this with `--enforce`).
+   the hook to `~/.claude/hooks/` and register it under
+   `hooks.UserPromptSubmit` in `~/.claude/settings.json`. Pick by platform:
+   - macOS/Linux — `hooks/style-reminder.sh`; register the path directly.
+   - Windows — `hooks/style-reminder.ps1`; register it as
+     `powershell.exe -NoProfile ~/.claude/hooks/style-reminder.ps1`. Do **not**
+     add `-File`: PowerShell does not expand `~` for that parameter, so the
+     hook would fail on every turn.
+
+   The repo installers do this for you: `install.sh --enforce` or
+   `install.ps1 -Enforce`.
 
 ## Notes
 

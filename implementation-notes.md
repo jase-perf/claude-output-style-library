@@ -44,3 +44,60 @@
 
 ### Open questions (решены за пользователя)
 - Хук ставится опционально (`--enforce`), не по умолчанию: молча писать hooks в чужой settings.json при установке «просто стиля» — слишком инвазивно.
+
+## Windows port (install.ps1 + style-reminder.ps1)
+
+_Written in English — the rest of this file is Russian; not translated to avoid
+introducing errors._
+
+Why a separate installer rather than documenting Git Bash: `install.sh` has two
+dependencies that both fail *silently* on Windows.
+
+- `bash` on PATH is normally `C:\Windows\system32\bash.exe` — WSL, where
+  `$HOME=/home/<user>`. Styles land in the WSL filesystem; Claude Code for
+  Windows never sees them, and the script reports success.
+- `python3` is normally a 0-byte Microsoft Store execution-alias stub. It
+  satisfies `command -v python3`, so the installer takes the python branch,
+  which then exits 9009. Under `set -e` the script dies after having already
+  printed its progress lines.
+
+`install.ps1` therefore uses no external tools at all.
+
+### Gotchas found while porting
+- **`ConvertTo-Json -Depth 100` is mandatory.** PowerShell 5.1 defaults to
+  depth 2 and silently serialises anything deeper as the literal string
+  `System.Object[]`. A real `settings.json` nests `hooks.<Event>[].hooks[]`
+  four levels down, so the default would quietly destroy the user's hooks.
+- **`ConvertFrom-Json -AsHashtable` does not exist on 5.1.** Merging into
+  `PSCustomObject` is painful, so the script converts the parsed document into
+  nested `[ordered]` hashtables first. Key order round-trips unchanged.
+- **`Set-Content -Encoding UTF8` writes a BOM on 5.1.** Uses
+  `[IO.File]::WriteAllText` with `UTF8Encoding($false)` instead.
+- **The hook command must not use `-File`.** PowerShell does not expand `~` for
+  the `-File` parameter, so `-File ~/.claude/hooks/...` fails every turn. Bare
+  `powershell.exe -NoProfile <path>` does expand it. The `~` form is preferred
+  so a `settings.json` synced between machines stays valid; an absolute path is
+  written only when `CLAUDE_DIR` is non-default.
+- `$PSScriptRoot` is empty under `irm | iex`, which is exactly when the remote
+  fetch path is wanted — so it doubles as the local-checkout detector.
+- `irm <url> | iex` cannot forward parameters; documented the
+  `& ([scriptblock]::Create((irm <url>))) -Style x` form instead.
+
+### Hook change affecting all platforms
+Both hooks now resolve `outputStyle` through the real settings precedence —
+`<cwd>/.claude/settings.local.json` → `<cwd>/.claude/settings.json` →
+`~/.claude/settings.json` — taking `cwd` from the hook's stdin payload.
+
+Reason: `/config` writes the output style to the **project's**
+`settings.local.json` (verified in the Claude Code binary: the Output style
+field's `onChange` calls `Gi("localSettings", {outputStyle})`, and the scope
+table maps `localSettings` → `.claude/settings.local.json`). The previous hook
+read only `~/.claude/settings.json`, so inside any project that had overridden
+the style it reinforced the *global* style every turn — actively contradicting
+the loaded one.
+
+`style-reminder.sh` also now verifies `python3` actually runs
+(`python3 -c ''`) instead of trusting `command -v`, so it degrades to the sed
+path rather than breaking if anyone runs it under Git Bash on Windows. Stdin is
+only read when not attached to a terminal, so running either hook by hand
+cannot hang.
