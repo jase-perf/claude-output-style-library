@@ -30,9 +30,9 @@ if command -v python3 >/dev/null 2>&1 && python3 -c '' >/dev/null 2>&1; then
 fi
 
 STYLES=(
-  wait-what plain-english eli15 analogy-engine feynman thing-explainer ladder
+  plain-english eli15 analogy-engine feynman thing-explainer ladder
   executive smart-brevity coach
-  caveman adhd no-slop no-ai-slop
+  caveman adhd no-slop
 )
 
 usage() {

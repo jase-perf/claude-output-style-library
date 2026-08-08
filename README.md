@@ -5,18 +5,18 @@
 <h1 align="center">awesome-claude-output-styles</h1>
 
 <p align="center">
-  <strong>same brain. fourteen mouths.</strong>
+  <strong>same brain. twelve mouths.</strong>
 </p>
 
 <p align="center">
-  Make Claude talk like a human. <strong>14 installable output styles</strong> for Claude Code,<br>
+  Make Claude talk like a human. <strong>12 installable output styles</strong> for Claude Code,<br>
   each distilled from a <strong>credited author's methodology</strong> — from Boeing-manual English<br>
   to the Minto Pyramid to the Feynman technique. One command to install and switch.
 </p>
 
 <p align="center">
   <a href="https://github.com/smixs/awesome-claude-output-styles/stargazers"><img src="https://img.shields.io/github/stars/smixs/awesome-claude-output-styles?style=flat&color=yellow" alt="stars"></a>
-  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-14_across_3_tiers-orange?style=flat" alt="14 styles"></a>
+  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-12_across_3_tiers-orange?style=flat" alt="12 styles"></a>
   <a href="https://github.com/smixs/awesome-claude-output-styles/commits/main"><img src="https://img.shields.io/github/last-commit/smixs/awesome-claude-output-styles?style=flat" alt="last commit"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/smixs/awesome-claude-output-styles?style=flat" alt="license"></a>
 </p>
@@ -90,20 +90,19 @@ Real, unedited Opus 5 voice, July 2026 threads:
 > creating a new object reference on each render cycle, which breaks React's
 > referential equality check, so you may want to consider memoization…
 
-The same answer, five voices:
+The same answer, four voices:
 
 <table>
 <tr><th width="34%" align="left">Voice</th><th align="left">Same answer</th></tr>
 <tr><td valign="top">
 
-**`wait-what`**<br><sub>after **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) — context first, ASD-STE100, your project's vocabulary</sub>
+**`plain-english`**<br><sub>ASD-STE100, plus **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) on your project's vocabulary</sub>
 
 </td><td valign="top">
 
-> We are hunting the extra re-renders in your list view. Your code creates a
-> new object on each render. React sees a new object and draws again. Wrap
-> the object in `useMemo`. Then React gets the same object and does not draw
-> again.
+> Your code creates a new object on each render. React sees a new object and
+> draws again. Wrap the object in `useMemo`. Then React gets the same object
+> and does not draw again.
 
 </td></tr>
 <tr><td valign="top">
@@ -118,18 +117,7 @@ The same answer, five voices:
 </td></tr>
 <tr><td valign="top">
 
-**`no-ai-slop`**<br><sub>after **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) — direct, opinionated, zero filler</sub>
-
-</td><td valign="top">
-
-> The inline object is new on every render, and React compares props by
-> identity — so it re-renders each time. Wrap it in `useMemo`. Don't reach
-> for `React.memo` here: it treats the symptom, this fixes the cause.
-
-</td></tr>
-<tr><td valign="top">
-
-**`no-slop`**<br><sub>the school of [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) — the anti-Claudism voice</sub>
+**`no-slop`**<br><sub>the school of [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) and [Peter Yang](https://github.com/petergyang/no-ai-slop) ([@petergyang](https://x.com/petergyang)) — the anti-Claudism voice</sub>
 
 </td><td valign="top">
 
@@ -152,7 +140,7 @@ The same answer, five voices:
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  styles                          14              │
+│  styles                          12              │
 │  credited authors & standards    20+             │
 │  code touched by any persona     never           │
 │  jargon left unexplained         0, by spec      │
@@ -169,7 +157,7 @@ One style (installs **and** activates it):
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
 ```
 
-Everything (installs all 14 + the style-maker skill; activate later via `/config`):
+Everything (installs all 12 + the style-maker skill; activate later via `/config`):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
@@ -203,7 +191,7 @@ From a local clone it's just `.\install.ps1 -All -Enforce`.
 | Parameter | Effect |
 | --- | --- |
 | `-Style <name> [<name>…]` | Install the named styles. A single one is also **activated**. |
-| `-All` | Install all 14 plus the `style-maker` skill. Activates nothing. |
+| `-All` | Install all 12 plus the `style-maker` skill. Activates nothing. |
 | `-Enforce` | Also install and register the per-turn reminder hook. |
 | `-List` | Print the available style names. |
 
@@ -299,8 +287,7 @@ degrades to the next one down, never to a broken turn.
 
 | Style | What it does | Method · author |
 |---|---|---|
-| [`wait-what`](output-styles/wait-what.md) | Context first, Simplified Technical English, your project's own vocabulary | **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) — his wait-what skill as an always-on style |
-| [`plain-english`](output-styles/plain-english.md) | ≤20-word sentences, one word one meaning, active voice | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) |
+| [`plain-english`](output-styles/plain-english.md) | ≤20-word sentences, one word one meaning, active voice, your project's own vocabulary | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) |
 | [`eli15`](output-styles/eli15.md) | Smart-teenager explanations: one analogy, its breaking point, a line to remember | ELI5 prompt research · r/explainlikeimfive house rules |
 | [`analogy-engine`](output-styles/analogy-engine.md) | One sustained analogy with part-by-part mapping | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist |
 | [`feynman`](output-styles/feynman.md) | Teaches, names the hard part, checks understanding with questions | Richard Feynman's technique |
@@ -321,8 +308,7 @@ degrades to the next one down, never to a broken turn.
 |---|---|---|
 | [`caveman`](output-styles/caveman.md) | Ultra-compact: same signal, all fluff dropped | [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
 | [`adhd`](output-styles/adhd.md) | Action first, numbered steps, lists ≤5, visible progress | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
-| [`no-slop`](output-styles/no-slop.md) | A plain, specific human voice — the anti-Claudism style | [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) ([@ConorBronsdon](https://x.com/ConorBronsdon)) · Joe Cotellese's generic-sentence test |
-| [`no-ai-slop`](output-styles/no-ai-slop.md) | Direct, opinionated, zero filler — slop removed at the source | **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) — his editing principles as Claude's default voice |
+| [`no-slop`](output-styles/no-slop.md) | A plain, specific human voice — the anti-Claudism style | [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) ([@ConorBronsdon](https://x.com/ConorBronsdon)) · Joe Cotellese's generic-sentence test · **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) |
 
 ## Make your own: style-maker
 
@@ -404,7 +390,7 @@ The style *text* is unchanged — the differences are curation and tooling.
 
 | | Upstream | Here |
 | --- | --- | --- |
-| Styles | 19, across 4 tiers | 14, across 3 — persona tier dropped |
+| Styles | 19, across 4 tiers | 12, across 3 — persona tier dropped, two pairs merged |
 | Windows install | `install.sh` only | [`install.ps1`](install.ps1) |
 | Windows enforce hook | — | [`style-reminder.ps1`](hooks/style-reminder.ps1) |
 | Hook reads style from | `~/.claude/settings.json` | full settings precedence |

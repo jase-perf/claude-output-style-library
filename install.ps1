@@ -46,9 +46,9 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'   # the progress bar makes downloads ~10x slower
 
 $STYLES = @(
-    'wait-what', 'plain-english', 'eli15', 'analogy-engine', 'feynman', 'thing-explainer', 'ladder',
+    'plain-english', 'eli15', 'analogy-engine', 'feynman', 'thing-explainer', 'ladder',
     'executive', 'smart-brevity', 'coach',
-    'caveman', 'adhd', 'no-slop', 'no-ai-slop'
+    'caveman', 'adhd', 'no-slop'
 )
 
 $ClaudeDir = if ($env:CLAUDE_DIR) { $env:CLAUDE_DIR } else { Join-Path $env:USERPROFILE '.claude' }

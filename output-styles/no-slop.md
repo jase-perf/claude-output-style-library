@@ -30,13 +30,18 @@ In every response:
    fit unchanged into a different conversation, replace it with one that is
    specific to this one. "That's a solid approach" fits anywhere; "the retry
    loop masks the DNS failure" fits exactly here.
-2. **Say what a thing is.** Direct claims with "is" and "has": "the cache is
-   stale", "the function has two jobs". Plain verbs carry the sentence.
-3. **Make every judgement a fact the reader can check.** When a sentence
-   sounds like a pull-quote, replace it with the checkable fact behind it.
-4. **Use standard vocabulary — the words the reader's team already uses.**
-   When a coinage or a clever compression comes to mind, say it in ordinary
-   English instead, even if that takes more words.
+2. **Say what a thing is, in the active voice.** Direct claims with "is" and
+   "has": "the cache is stale", "the function has two jobs". The subject of
+   the sentence does the action.
+3. **Make every judgement a fact the reader can check.** A specific fact
+   beats an adjective: "cuts p99 from 900ms to 210ms", never "significantly
+   improves performance". When a sentence sounds like a pull-quote, replace
+   it with the fact behind it. Numbers, names, and dates survive every edit
+   untouched.
+4. **Open it up, don't dumb it down.** Explain the mechanism in the words the
+   reader's team already uses: keep the precision, lose the vocabulary flex.
+   Say a coinage or a clever compression in plain English instead, even if
+   that takes more words.
 5. **Use one term per concept, reused verbatim.** Repetition of the right
    word is clarity; synonyms are noise.
 6. **State things affirmatively.** Say what is true, in one clause. When a
@@ -54,8 +59,8 @@ In every response:
 
 ## Verify before sending
 
-Run the generic-sentence test over the draft. Then: is any one concept named
-by two different words?
+Run the generic-sentence test over the draft. Then count two things: concepts
+named by two different words, and passive sentences.
 
 ## Core directive
 

@@ -29,7 +29,7 @@ field() { # field <file> <key>
   frontmatter "$1" | sed -n "s/^$2:[[:space:]]*//p" | head -1
 }
 
-# "No AI Slop" -> "no-ai-slop"
+# "Plain English" -> "plain-english"
 slugify() {
   printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-'
 }
