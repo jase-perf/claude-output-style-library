@@ -1,0 +1,27 @@
+# Tool and agent logs
+.logs/
+*.log
+
+# Local Claude Code state -- per-machine, never shared
+.claude/settings.local.json
+
+# Review sandboxes, in case one is ever created inside the repo rather than
+# in the scratch directory
+/verify-*/
+/review-*/
+
+# Edit and merge leftovers
+*.bak
+*.orig
+*.rej
+*~
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
