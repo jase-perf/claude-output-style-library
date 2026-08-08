@@ -48,8 +48,7 @@ $ProgressPreference = 'SilentlyContinue'   # the progress bar makes downloads ~1
 $STYLES = @(
     'wait-what', 'plain-english', 'eli15', 'analogy-engine', 'feynman', 'thing-explainer', 'ladder',
     'executive', 'smart-brevity', 'coach',
-    'caveman', 'adhd', 'no-slop', 'no-ai-slop',
-    'street', 'gen-z', 'sportscaster', 'yoda', 'bedtime-story'
+    'caveman', 'adhd', 'no-slop', 'no-ai-slop'
 )
 
 $ClaudeDir = if ($env:CLAUDE_DIR) { $env:CLAUDE_DIR } else { Join-Path $env:USERPROFILE '.claude' }
@@ -127,7 +126,7 @@ function ConvertTo-OrderedHashtable {
     return $InputObject
 }
 
-function Update-Settings {
+function Update-SettingsFile {
     param([scriptblock] $Mutate)
     $path = Join-Path $ClaudeDir 'settings.json'
     $data = [ordered]@{}
@@ -168,7 +167,7 @@ function Install-EnforceHook {
     $target = if ($IsDefaultClaudeDir) { '~/.claude/hooks/style-reminder.ps1' } else { $hookPath }
     $cmd = "powershell.exe -NoProfile $target"
 
-    $settings = Update-Settings {
+    $settings = Update-SettingsFile {
         param($data)
         if (-not $data.Contains('hooks')) { $data['hooks'] = [ordered]@{} }
         if (-not $data['hooks'].Contains('UserPromptSubmit')) { $data['hooks']['UserPromptSubmit'] = @() }
@@ -201,7 +200,7 @@ function Set-ActiveStyle {
         Write-Host 'warning: no name in frontmatter, skipping activation'
         return
     }
-    $settings = Update-Settings {
+    $settings = Update-SettingsFile {
         param($data)
         $data['outputStyle'] = $styleName
     }
@@ -211,7 +210,9 @@ function Set-ActiveStyle {
 
 # --- main ------------------------------------------------------------------
 if ($Help) { Show-Usage; return }
-if ($List) { $STYLES + 'style-maker' | ForEach-Object { Write-Host $_ }; return }
+# Write-Output, not Write-Host: -List is data, and Write-Host bypasses the
+# pipeline so it cannot be captured or asserted on in CI.
+if ($List) { $STYLES + 'style-maker' | ForEach-Object { Write-Output $_ }; return }
 
 if ($All) {
     foreach ($s in $STYLES) { Install-Style $s }

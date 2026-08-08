@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  styles:
+    name: Style invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Enforces what was previously held by discipline alone: frontmatter
+      # schema, slug/name agreement, the four Guardrails clauses, body budget,
+      # installer lists matching disk, and a CREDITS entry per style.
+      - run: sh tests/check-styles.sh
+
+  lint:
+    name: Lint scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y shellcheck
+          shellcheck -s sh hooks/style-reminder.sh tests/*.sh
+          shellcheck -s bash install.sh
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $r = Invoke-ScriptAnalyzer -Path . -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+          if ($r) { $r | Format-Table -AutoSize | Out-String -Width 200 | Write-Host; exit 1 }
+          'PSScriptAnalyzer clean'
+
+  # A CR in the shebang makes install.sh die with "bad interpreter: /bin/sh^M"
+  # on every non-Windows machine. .gitattributes pins it; this proves the pin.
+  line-endings:
+    name: Shell scripts are LF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          status=0
+          for f in $(git ls-files '*.sh'); do
+            if grep -q $'\r' "$f"; then echo "CRLF found in $f"; status=1; fi
+          done
+          [ $status -eq 0 ] && echo "all .sh files are LF"
+          exit $status
+
+  hooks:
+    name: Hook (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      # The POSIX hook ships for macOS/Linux; Git Bash on the Windows runner
+      # exercises it too, which is where the python3-stub fallback shows up.
+      - name: style-reminder.sh
+        shell: bash
+        run: sh tests/test-hook.sh
+      - name: style-reminder.ps1
+        shell: pwsh
+        run: pwsh -NoProfile -File tests/Test-Hook.ps1
+
+  installers:
+    name: Installer (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: install.sh
+        shell: bash
+        run: sh tests/test-install.sh
+      - name: install.ps1 -All -Enforce into a throwaway CLAUDE_DIR
+        shell: pwsh
+        run: |
+          $sandbox = Join-Path ([IO.Path]::GetTempPath()) "ci-$([guid]::NewGuid().ToString('N').Substring(0,8))"
+          $env:CLAUDE_DIR = $sandbox
+          ./install.ps1 -All -Enforce
+          $expected = (Get-ChildItem output-styles/*.md).Count
+          $actual = (Get-ChildItem "$sandbox/output-styles/*.md").Count
+          if ($actual -ne $expected) { throw "installed $actual styles, expected $expected" }
+          $s = Get-Content "$sandbox/settings.json" -Raw | ConvertFrom-Json
+          if (-not $s.hooks.UserPromptSubmit) { throw 'enforce hook was not registered' }
+          # Re-run: registration must be idempotent, not append-per-run.
+          ./install.ps1 -All -Enforce | Out-Null
+          $s2 = Get-Content "$sandbox/settings.json" -Raw | ConvertFrom-Json
+          if (@($s2.hooks.UserPromptSubmit).Count -ne 1) {
+            throw "UserPromptSubmit has $(@($s2.hooks.UserPromptSubmit).Count) entries after 2 runs, expected 1"
+          }
+          $env:CLAUDE_DIR = $null
+          "install.ps1 OK on $($PSVersionTable.OS ?? 'Windows')"

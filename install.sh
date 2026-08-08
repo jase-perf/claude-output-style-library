@@ -19,11 +19,20 @@ set -euo pipefail
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
 RAW="${RAW:-https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main}"
 
+# Verify python3 actually RUNS -- do not just check that it is on PATH. On
+# Windows `python3` is normally a 0-byte Microsoft Store execution-alias stub:
+# it satisfies `command -v`, then exits 9009 printing a Store advert. Under
+# `set -e` that killed the installer after it had already reported progress.
+# Now the python-free branch runs instead and says something true.
+HAVE_PY=0
+if command -v python3 >/dev/null 2>&1 && python3 -c '' >/dev/null 2>&1; then
+  HAVE_PY=1
+fi
+
 STYLES=(
   wait-what plain-english eli15 analogy-engine feynman thing-explainer ladder
   executive smart-brevity coach
   caveman adhd no-slop no-ai-slop
-  street gen-z sportscaster yoda bedtime-story
 )
 
 usage() {
@@ -58,7 +67,7 @@ install_enforce_hook() {
   fetch "hooks/style-reminder.sh" "$CLAUDE_DIR/hooks/style-reminder.sh"
   chmod +x "$CLAUDE_DIR/hooks/style-reminder.sh"
   local settings="$CLAUDE_DIR/settings.json"
-  if command -v python3 >/dev/null 2>&1; then
+  if [ "$HAVE_PY" = 1 ]; then
     python3 - "$settings" "$CLAUDE_DIR/hooks/style-reminder.sh" <<'PY'
 import json, os, sys
 path, cmd = sys.argv[1], sys.argv[2]
@@ -88,7 +97,7 @@ activate() { # activate <style-file>
   style_name=$(sed -n 's/^name:[[:space:]]*//p' "$file" | head -1)
   [ -n "$style_name" ] || { echo "warning: no name in frontmatter, skipping activation"; return; }
   local settings="$CLAUDE_DIR/settings.json"
-  if command -v python3 >/dev/null 2>&1; then
+  if [ "$HAVE_PY" = 1 ]; then
     python3 - "$settings" "$style_name" <<'PY'
 import json, os, sys
 path, name = sys.argv[1], sys.argv[2]

@@ -5,18 +5,18 @@
 <h1 align="center">awesome-claude-output-styles</h1>
 
 <p align="center">
-  <strong>same brain. nineteen mouths.</strong>
+  <strong>same brain. fourteen mouths.</strong>
 </p>
 
 <p align="center">
-  Make Claude talk like a human. <strong>19 installable output styles</strong> for Claude Code,<br>
+  Make Claude talk like a human. <strong>14 installable output styles</strong> for Claude Code,<br>
   each distilled from a <strong>credited author's methodology</strong> — from Boeing-manual English<br>
-  to the Minto Pyramid to bedtime stories. One curl to install and switch.
+  to the Minto Pyramid to the Feynman technique. One command to install and switch.
 </p>
 
 <p align="center">
   <a href="https://github.com/smixs/awesome-claude-output-styles/stargazers"><img src="https://img.shields.io/github/stars/smixs/awesome-claude-output-styles?style=flat&color=yellow" alt="stars"></a>
-  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-19_across_4_tiers-orange?style=flat" alt="19 styles"></a>
+  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-14_across_3_tiers-orange?style=flat" alt="14 styles"></a>
   <a href="https://github.com/smixs/awesome-claude-output-styles/commits/main"><img src="https://img.shields.io/github/last-commit/smixs/awesome-claude-output-styles?style=flat" alt="last commit"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/smixs/awesome-claude-output-styles?style=flat" alt="license"></a>
 </p>
@@ -35,8 +35,14 @@
 
 > [!NOTE]
 > **This is a fork of [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).**
-> All 19 styles, the format guide, and the original design are their work — see
+> The styles, the format guide, and the original design are their work — see
 > [docs/CREDITS.md](docs/CREDITS.md).
+>
+> **This fork is curated for professional use.** Upstream ships 19 styles; the
+> five persona styles (`street`, `gen-z`, `sportscaster`, `yoda`,
+> `bedtime-story`) are not carried here. They are good work and still available
+> upstream — they just do not fit a library meant for work contexts. `caveman`
+> stays: terse-technical is an established practice, not a bit.
 >
 > **Added in this fork:** Windows support — [`install.ps1`](install.ps1) and
 > [`hooks/style-reminder.ps1`](hooks/style-reminder.ps1) — plus a fix so the
@@ -84,7 +90,7 @@ Real, unedited Opus 5 voice, July 2026 threads:
 > creating a new object reference on each render cycle, which breaks React's
 > referential equality check, so you may want to consider memoization…
 
-The same answer, six voices:
+The same answer, five voices:
 
 <table>
 <tr><th width="34%" align="left">Voice</th><th align="left">Same answer</th></tr>
@@ -142,22 +148,11 @@ The same answer, six voices:
 > Why: a new object every render makes React think the prop changed.
 
 </td></tr>
-<tr><td valign="top">
-
-**`gen-z`**
-
-</td><td valign="top">
-
-> found it, no cap: you hand React a brand-new object every render, so it
-> thinks something changed and redraws. wrap it in `useMemo` and it's a
-> clean W.
-
-</td></tr>
 </table>
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  styles                          19              │
+│  styles                          14              │
 │  credited authors & standards    20+             │
 │  code touched by any persona     never           │
 │  jargon left unexplained         0, by spec      │
@@ -174,7 +169,7 @@ One style (installs **and** activates it):
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
 ```
 
-Everything (installs all 19 + the style-maker skill; activate later via `/config`):
+Everything (installs all 14 + the style-maker skill; activate later via `/config`):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
@@ -208,7 +203,7 @@ From a local clone it's just `.\install.ps1 -All -Enforce`.
 | Parameter | Effect |
 | --- | --- |
 | `-Style <name> [<name>…]` | Install the named styles. A single one is also **activated**. |
-| `-All` | Install all 19 plus the `style-maker` skill. Activates nothing. |
+| `-All` | Install all 14 plus the `style-maker` skill. Activates nothing. |
 | `-Enforce` | Also install and register the per-turn reminder hook. |
 | `-List` | Print the available style names. |
 
@@ -229,7 +224,7 @@ once, not once per run.
 Because on a typical Windows box it fails twice, both times silently:
 
 - **`bash` on PATH is usually WSL**, where `$HOME` is `/home/<user>` — not
-  `C:\Users\<user>`. The installer copies 19 files into the WSL filesystem,
+  `C:\Users\<user>`. The installer copies the style files into the WSL filesystem,
   where Claude Code for Windows will never look, and reports success.
 - **`python3` is usually a 0-byte Microsoft Store stub.** It satisfies
   `command -v python3`, so the installer takes the python branch — and then
@@ -329,16 +324,6 @@ degrades to the next one down, never to a broken turn.
 | [`no-slop`](output-styles/no-slop.md) | A plain, specific human voice — the anti-Claudism style | [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) ([@ConorBronsdon](https://x.com/ConorBronsdon)) · Joe Cotellese's generic-sentence test |
 | [`no-ai-slop`](output-styles/no-ai-slop.md) | Direct, opinionated, zero filler — slop removed at the source | **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) — his editing principles as Claude's default voice |
 
-### Fun — personas that still get it right
-
-| Style | What it does | Method · author |
-|---|---|---|
-| [`street`](output-styles/street.md) | Sharp senior engineer in modern street slang. **18+**, profanity | house style, sibling of [pohuy](https://github.com/smixs/pohuy) |
-| [`gen-z`](output-styles/gen-z.md) | Brainrot wrapper, exact engineering inside. Slang dated by design | [Anirudh Konidala](https://github.com/kidskoding/gen-z-claude-bro) · [Steve Nims](https://github.com/sjnims/gen-alpha-output-style) |
-| [`sportscaster`](output-styles/sportscaster.md) | Live play-by-play on your codebase | STAA Play-by-Play Pyramid · broadcasters' craft rules |
-| [`yoda`](output-styles/yoda.md) | Plain answer first; the closing lesson, inverted it is | house style |
-| [`bedtime-story`](output-styles/bedtime-story.md) | Concepts as tiny calming stories, real mechanism inside | house style |
-
 ## Make your own: style-maker
 
 Presets not fitting? Install the interview skill:
@@ -415,14 +400,29 @@ it — and helps the credited authors get found too. ⭐
 ## What's different in this fork
 
 Upstream is [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).
-The 19 styles are unchanged — the differences are all in the tooling.
+The style *text* is unchanged — the differences are curation and tooling.
 
 | | Upstream | Here |
 | --- | --- | --- |
+| Styles | 19, across 4 tiers | 14, across 3 — persona tier dropped |
 | Windows install | `install.sh` only | [`install.ps1`](install.ps1) |
 | Windows enforce hook | — | [`style-reminder.ps1`](hooks/style-reminder.ps1) |
 | Hook reads style from | `~/.claude/settings.json` | full settings precedence |
 | Line endings | per-contributor `core.autocrlf` | pinned by [`.gitattributes`](.gitattributes) |
+| CI | — | invariant tests on 3 OSes |
+
+### 0. Curated for professional use
+
+The five persona styles — `street`, `gen-z`, `sportscaster`, `yoda`,
+`bedtime-story` — are not carried here. Nothing is wrong with them; they are
+simply the wrong default for a library people install at work, and a catalog
+reads as serious or it doesn't. They remain available upstream, unmodified.
+
+`caveman` stays despite the name: compressed technical fragments are a real
+practice with a real readership, and its guardrails are as strict as any other
+style's.
+
+No style's *text* was edited. This is a subtraction, not a rewrite.
 
 ### 1. A real Windows installer
 
@@ -430,7 +430,7 @@ The 19 styles are unchanged — the differences are all in the tooling.
 *present but wrong*, and each fails without an error:
 
 - **`bash` on PATH is normally WSL** (`C:\Windows\system32\bash.exe`), where
-  `$HOME` is `/home/<user>`. The 19 styles land in the WSL filesystem, which
+  `$HOME` is `/home/<user>`. The styles land in the WSL filesystem, which
   Claude Code for Windows never reads — and the script prints success.
 - **`python3` is normally a 0-byte Microsoft Store stub.** It satisfies
   `command -v python3`, so the installer takes the python branch, which then
@@ -460,7 +460,37 @@ it by hand cannot hang. Every code path still exits 0 — a missing, half-writte
 or malformed settings file falls through to the next one rather than breaking a
 turn.
 
-### 3. `.gitattributes`
+### 3. Tests, and CI that runs them
+
+Upstream has no automated checks. The invariants that make these styles safe
+were held by the author's care alone — a style whose Guardrails block quietly
+omitted the security clause would install and run exactly like a correct one,
+and nothing would notice.
+
+Now something does. Run the whole suite locally:
+
+```bash
+sh tests/check-styles.sh && sh tests/test-hook.sh && sh tests/test-install.sh
+```
+
+| Suite | Asserts |
+| --- | --- |
+| [`check-styles.sh`](tests/check-styles.sh) | Frontmatter schema · slug matches display name · identity line and `Style Active` header present · **all four Guardrails clauses present** · body within token budget · both installer lists match what's on disk · every style credited in `CREDITS.md` |
+| [`test-hook.sh`](tests/test-hook.sh) · [`Test-Hook.ps1`](tests/Test-Hook.ps1) | Full precedence chain · falls through missing/empty/malformed settings · silent for built-ins · **exits 0 on every path**, because this runs on every prompt |
+| [`test-install.sh`](tests/test-install.sh) | `--list` matches disk · single style activates · `--all` activates nothing · unknown style rejected · **the settings.json merge preserves existing hooks, permissions and plugins** · hook registration is idempotent |
+
+CI runs all of it on Ubuntu, macOS and Windows, plus `shellcheck`,
+PSScriptAnalyzer, and a check that no `.sh` file has acquired a CR.
+
+Writing the tests immediately paid for itself — they caught an untestable
+`Write-Host` in `-List`, a broken list parser, and the fact that `install.sh`
+died with an exit-9009 Microsoft Store advert on Windows instead of falling
+back to its own python-free branch.
+
+Checks that genuinely cannot run in an environment are reported as `SKIP` with
+a reason, never passed silently.
+
+### 4. `.gitattributes`
 
 Without it, a commit made on a Windows machine whose git has
 `core.autocrlf=false` ships `install.sh` with a CR in the shebang, and every

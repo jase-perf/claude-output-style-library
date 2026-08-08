@@ -62,18 +62,8 @@ copyright notices per MIT.
   ([@petergyang](https://x.com/petergyang)), MIT — 20+ slop patterns,
   voice-preservation-first editing, and the portability test are his.
 
-## Fun
+---
 
-- **street** — house style, sibling of [pohuy](https://github.com/smixs/pohuy).
-- **gen-z** — intensity-ladder pattern from
-  [kidskoding/gen-z-claude-bro](https://github.com/kidskoding/gen-z-claude-bro)
-  (MIT); glossary approach from
-  [sjnims/gen-alpha-output-style](https://github.com/sjnims/gen-alpha-output-style)
-  (MIT). The slang is dated by design — "6-7" was Dictionary.com's 2025 word
-  of the year and was already getting mocked by mid-2026; when the words rot,
-  the style stays funny as a period piece.
-- **sportscaster** — the STAA Play-by-Play Pyramid and working broadcasters'
-  craft rules; persona formulation inspired by community "sports commentator"
-  prompts.
-- **yoda** — house style.
-- **bedtime-story** — house style.
+The five persona styles upstream carries (`street`, `gen-z`, `sportscaster`,
+`yoda`, `bedtime-story`) are not part of this fork; their credits live in
+[the upstream CREDITS](https://github.com/smixs/awesome-claude-output-styles/blob/main/docs/CREDITS.md).
