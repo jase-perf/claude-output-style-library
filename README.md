@@ -24,6 +24,7 @@
 <p align="center">
   <a href="#before--after">See it</a> ·
   <a href="#install">Install</a> ·
+  <a href="#whats-different-in-this-fork">Fork changes</a> ·
   <a href="#the-styles">The styles</a> ·
   <a href="#make-your-own-style-maker">Make your own</a> ·
   <a href="#shared-design-rules">Design rules</a> ·
@@ -31,6 +32,24 @@
 </p>
 
 ---
+
+> [!NOTE]
+> **This is a fork of [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).**
+> All 19 styles, the format guide, and the original design are their work — see
+> [docs/CREDITS.md](docs/CREDITS.md).
+>
+> **Added in this fork:** Windows support — [`install.ps1`](install.ps1) and
+> [`hooks/style-reminder.ps1`](hooks/style-reminder.ps1) — plus a fix so the
+> enforce hook resolves the active style through Claude Code's real settings
+> precedence rather than the user-level file alone (it now respects a style set
+> per-project by `/config`). Both changes are in
+> [`style-reminder.sh`](hooks/style-reminder.sh) too, so macOS and Linux get the
+> fix as well.
+>
+> The install commands below fetch from this fork. The badges, credits, "Sister
+> project", and issue links all still point upstream.
+>
+> Full detail: [What's different in this fork](#whats-different-in-this-fork).
 
 Output styles are the right layer for fixing Claude's voice: they rewrite the
 system prompt itself and reframe the agent's identity around your voice —
@@ -178,8 +197,26 @@ Everything:
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -All
 ```
 
-From a local clone, it's just `.\install.ps1 -All` (add `-List` to see the
-names, `-Enforce` for the hook below).
+Setting up a new machine — everything, with the reminder hook:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -All -Enforce
+```
+
+From a local clone it's just `.\install.ps1 -All -Enforce`.
+
+| Parameter | Effect |
+| --- | --- |
+| `-Style <name> [<name>…]` | Install the named styles. A single one is also **activated**. |
+| `-All` | Install all 19 plus the `style-maker` skill. Activates nothing. |
+| `-Enforce` | Also install and register the per-turn reminder hook. |
+| `-List` | Print the available style names. |
+
+Requires PowerShell 5.1 (ships with Windows) or later — `pwsh` works too. The
+installer **merges** into `~/.claude/settings.json` rather than overwriting it,
+after backing the file up to `settings.json.bak`, so existing hooks,
+permissions, and plugins survive. Re-running it is safe: the hook registers
+once, not once per run.
 
 > [!NOTE]
 > The `& ([scriptblock]::Create(...))` wrapper is how a remote script receives
@@ -374,6 +411,73 @@ style that started this collection. Same guardrails, four roots, 18+.
 
 If one of these voices saved you a re-read, a star helps the next person find
 it — and helps the credited authors get found too. ⭐
+
+## What's different in this fork
+
+Upstream is [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles).
+The 19 styles are unchanged — the differences are all in the tooling.
+
+| | Upstream | Here |
+| --- | --- | --- |
+| Windows install | `install.sh` only | [`install.ps1`](install.ps1) |
+| Windows enforce hook | — | [`style-reminder.ps1`](hooks/style-reminder.ps1) |
+| Hook reads style from | `~/.claude/settings.json` | full settings precedence |
+| Line endings | per-contributor `core.autocrlf` | pinned by [`.gitattributes`](.gitattributes) |
+
+### 1. A real Windows installer
+
+`install.sh` needs bash and python3. On a typical Windows machine both are
+*present but wrong*, and each fails without an error:
+
+- **`bash` on PATH is normally WSL** (`C:\Windows\system32\bash.exe`), where
+  `$HOME` is `/home/<user>`. The 19 styles land in the WSL filesystem, which
+  Claude Code for Windows never reads — and the script prints success.
+- **`python3` is normally a 0-byte Microsoft Store stub.** It satisfies
+  `command -v python3`, so the installer takes the python branch, which then
+  exits 9009 — after the progress lines have already scrolled past.
+
+[`install.ps1`](install.ps1) has no external dependencies at all.
+
+### 2. The enforce hook follows settings precedence
+
+Upstream's hook reads `~/.claude/settings.json` and nothing else. But `/config`
+writes your output style to the **project's** `.claude/settings.local.json`, so
+in any project where you picked a style, the old hook would announce the
+*global* style every turn — contradicting the one actually loaded. That is
+worse than no reminder.
+
+Both hooks now resolve in the real order, taking the project directory from the
+hook's own stdin payload:
+
+```
+<cwd>/.claude/settings.local.json  →  <cwd>/.claude/settings.json  →  ~/.claude/settings.json
+```
+
+[`style-reminder.sh`](hooks/style-reminder.sh) gets this too, so macOS and Linux
+benefit. It also now verifies `python3` actually *runs* instead of trusting
+`command -v`, and only reads stdin when not attached to a terminal, so running
+it by hand cannot hang. Every code path still exits 0 — a missing, half-written,
+or malformed settings file falls through to the next one rather than breaking a
+turn.
+
+### 3. `.gitattributes`
+
+Without it, a commit made on a Windows machine whose git has
+`core.autocrlf=false` ships `install.sh` with a CR in the shebang, and every
+macOS and Linux user gets `bad interpreter: /bin/sh^M`. `*.sh` is now pinned to
+LF regardless of local config.
+
+### Staying in sync
+
+The styles themselves are untouched, so pulling upstream is clean:
+
+```bash
+git fetch upstream && git merge upstream/main
+```
+
+Only `install.sh`, the hooks, and the README carry fork changes. Note that the
+install URLs here point at this fork — upstream's copies do not include the
+PowerShell installer.
 
 ## Contributing
 
