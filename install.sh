@@ -2,13 +2,13 @@
 # awesome-claude-output-styles installer
 #
 # Install one style (and make it active):
-#   curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15
+#   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
 #
 # Install everything (nothing is activated, pick later via /config):
-#   curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --all
+#   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
 #
 # List available styles:
-#   curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --list
+#   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --list
 #
 # Add --enforce to also install a UserPromptSubmit hook that re-reminds Claude
 # of the active style every turn (Claude Code only does this for built-in
@@ -17,7 +17,7 @@
 set -euo pipefail
 
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
-RAW="${RAW:-https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main}"
+RAW="${RAW:-https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main}"
 
 STYLES=(
   wait-what plain-english eli15 analogy-engine feynman thing-explainer ladder

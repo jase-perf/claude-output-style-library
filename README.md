@@ -152,13 +152,13 @@ The same answer, six voices:
 One style (installs **and** activates it):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
 ```
 
 Everything (installs all 19 + the style-maker skill; activate later via `/config`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- --all
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
 ```
 
 ### Windows (PowerShell)
@@ -233,7 +233,7 @@ any install command and a tiny `UserPromptSubmit` hook gives whatever style you
 have active the same per-turn reinforcement:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- eli15 --enforce
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15 --enforce
 ```
 
 ```powershell
@@ -307,7 +307,7 @@ degrades to the next one down, never to a broken turn.
 Presets not fitting? Install the interview skill:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/smixs/awesome-claude-output-styles/main/install.sh | bash -s -- style-maker
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- style-maker
 ```
 
 Then tell Claude **"make my output style"**. It asks ~10 questions (audience,
