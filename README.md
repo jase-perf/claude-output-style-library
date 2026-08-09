@@ -5,18 +5,18 @@
 <h1 align="center">Claude Output Style Library</h1>
 
 <p align="center">
-  <strong>same brain. twelve mouths.</strong>
+  <strong>same brain. eight mouths.</strong>
 </p>
 
 <p align="center">
-  Make Claude talk like a human. <strong>12 installable output styles</strong> for Claude Code,<br>
+  Make Claude talk like a human. <strong>8 installable output styles</strong> for Claude Code,<br>
   each distilled from a <strong>credited author's methodology</strong> — from Boeing-manual English<br>
   to the Minto Pyramid to the Feynman technique. One command to install and switch.
 </p>
 
 <p align="center">
   <a href="https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml"><img src="https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-12_across_3_tiers-orange?style=flat" alt="12 styles"></a>
+  <a href="#the-styles"><img src="https://img.shields.io/badge/styles-8_across_3_groups-orange?style=flat" alt="8 styles"></a>
   <a href="#how-this-library-is-built">
     <img src="https://img.shields.io/badge/every_style-adversarially_reviewed-blue?style=flat" alt="adversarially reviewed"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/jase-perf/claude-output-style-library?style=flat" alt="license"></a>
@@ -131,7 +131,7 @@ The same answer, four voices:
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  styles                          12              │
+│  styles                           8              │
 │  credited authors & standards    20+             │
 │  code touched by any persona     never           │
 │  jargon left unexplained         0, by spec      │
@@ -148,7 +148,7 @@ One style (installs **and** activates it):
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
 ```
 
-Everything (installs all 12 + the style-maker skill; activate later via `/config`):
+Everything (installs all 8 + the style-maker skill; activate later via `/config`):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
@@ -182,7 +182,7 @@ From a local clone it's just `.\install.ps1 -All -Enforce`.
 | Parameter | Effect |
 | --- | --- |
 | `-Style <name> [<name>…]` | Install the named styles. A single one is also **activated**. |
-| `-All` | Install all 12 plus the `style-maker` skill. Activates nothing. |
+| `-All` | Install all 8 plus the `style-maker` skill. Activates nothing. |
 | `-Enforce` | Also install and register the per-turn reminder hook. |
 | `-List` | Print the available style names. |
 
@@ -287,32 +287,28 @@ degrades to the next one down, never to a broken turn.
 
 ## The styles
 
-### Understand — for explaining to humans
+### Everyday answers
 
 | Style | What it does | Method · author |
 |---|---|---|
-| [`plain-english`](output-styles/plain-english.md) | ≤20-word sentences, one word one meaning, active voice, your project's own vocabulary | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) |
-| [`eli15`](output-styles/eli15.md) | Smart-teenager explanations: one analogy, its breaking point, a line to remember | ELI5 prompt research · r/explainlikeimfive house rules |
-| [`analogy-engine`](output-styles/analogy-engine.md) | One sustained analogy with part-by-part mapping | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist |
-| [`feynman`](output-styles/feynman.md) | Teaches, names the hard part, checks understanding with questions | Richard Feynman's technique |
-| [`thing-explainer`](output-styles/thing-explainer.md) | Only the ten hundred most common words | [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*) |
-| [`ladder`](output-styles/ladder.md) | Every answer at 3 levels: like I'm 5 → 15 → pro | the classic r/PromptEngineering pattern |
+| [`plain-prose`](output-styles/plain-prose.md) | Ordinary paragraphs, no template, no word limit. Claims are facts you can check | [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) ([@ConorBronsdon](https://x.com/ConorBronsdon)) · Joe Cotellese's generic-sentence test · **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) · [Hardik Pandya](https://github.com/hardikpandya/stop-slop) ([@hvpandya](https://x.com/hvpandya)) |
+| [`short-answers`](output-styles/short-answers.md) | The same answer under a real word budget, closing on what it did not check | [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
 
-### Business — for decision-makers
+### Work documents
 
 | Style | What it does | Method · author |
 |---|---|---|
-| [`executive`](output-styles/executive.md) | Answer first, ≤3 reasons, evidence on request | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) ([@jcotellese](https://x.com/jcotellese)) |
-| [`smart-brevity`](output-styles/smart-brevity.md) | 6-word tease, "Why it matters:", "Go deeper:" | Smart Brevity · Jim VandeHei, Mike Allen, Roy Schwartz (Axios) |
-| [`coach`](output-styles/coach.md) | One note, one image, one next action | Hemingway App rules · Paul Graham's ["Write Like You Talk"](https://paulgraham.com/talk.html) · [Hardik Pandya](https://github.com/hardikpandya/stop-slop) ([@hvpandya](https://x.com/hvpandya)) |
+| [`decision-brief`](output-styles/decision-brief.md) | Answer first, ≤3 reasons, and the decision you owe named at the end | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) ([@jcotellese](https://x.com/jcotellese)) |
+| [`where-we-are`](output-styles/where-we-are.md) | Next action on line one, plus where the work stands, every turn | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
 
-### Terse — for speed
+### Explaining to someone
 
 | Style | What it does | Method · author |
 |---|---|---|
-| [`caveman`](output-styles/caveman.md) | Ultra-compact: same signal, all fluff dropped | [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
-| [`adhd`](output-styles/adhd.md) | Action first, numbered steps, lists ≤5, visible progress | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
-| [`no-slop`](output-styles/no-slop.md) | A plain, specific human voice — the anti-Claudism style | [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) ([@ConorBronsdon](https://x.com/ConorBronsdon)) · Joe Cotellese's generic-sentence test · **[Peter Yang](https://github.com/petergyang/no-ai-slop)** ([@petergyang](https://x.com/petergyang)) |
+| [`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md) | ≤20-word sentences, one word one meaning, and it never drops that register | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) |
+| [`small-words`](output-styles/small-words.md) | Everyday words only, so each part is named by what it does | [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*) |
+| [`one-analogy`](output-styles/one-analogy.md) | One comparison carries the answer, every part mapped, and where it stops being true | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist · ELI5 prompt research |
+| [`your-turn`](output-styles/your-turn.md) | Ends on a question and waits, instead of handing you the answer | Richard Feynman's technique |
 
 ## Make your own: style-maker
 
@@ -428,14 +424,31 @@ fails the build if a style is missing it. You should not have to wonder whether
 installing a terse voice also made Claude terser about warning you before it
 deletes something.
 
-**3. Twelve styles, not nineteen, because merges had to survive an attack.**
+**3. Eight styles, not nineteen — and the first attempt to cut them failed.**
 
-Collections grow. This one was pruned: every proposed merge was handed to an
-adversary told to *refute* it by writing the answer each style would give to
-the same prompt and showing they differ. Six merges were proposed; five were
-refuted and survive as separate files; one survived and was merged. The
-practical effect is that when two entries look similar in the picker, they
-aren't — the difference has been demonstrated.
+Collections grow. Pruning one turns out to be harder than it looks, and the
+first attempt here got the test wrong in a way worth describing, because the
+same mistake is easy to make.
+
+That round asked an adversary to *refute* each proposed merge by finding a
+single prompt where two styles' rules produce different answers. That bar is
+trivially easy to clear — five of six merges were refuted, almost nothing was
+cut, and the library was still full of entries nobody could choose between.
+Rules differing on paper is not the same as answers differing on screen.
+
+The second round tested the output instead. The same four questions were
+written out in all twelve styles, with the invented details held identical so
+style was the only variable, and the results were compared side by side.
+Twelve styles produced four or five distinguishable answers. `caveman` added
+no information across four prompts — it was the same answer with the articles
+removed. `smart-brevity` came in at 178 words against `decision-brief`'s 178,
+same facts, same order, differing only in which label sat above the list.
+
+A separate test showed only the names and one-line descriptions to a reader
+who could not see the rules, and asked them to pick a style for eight
+realistic tasks. Names that produced confident wrong picks were the ones that
+got replaced. That is why nothing here is named after a person, a book, or an
+acronym any more.
 
 **4. The hardest instruction to follow gets a countable check.**
 
@@ -516,8 +529,8 @@ What has changed since:
 
 | | Upstream | Here |
 | --- | --- | --- |
-| Styles | 19, across 4 tiers | 12, across 3 — persona tier dropped, two pairs merged |
-| Style bodies | original text | all 12 rewritten against the spec below |
+| Styles | 19, across 4 tiers | 8, across 3 groups — persona tier dropped, nine cut or merged |
+| Style bodies | original text | all 8 rewritten against the spec below |
 | Windows install | `install.sh` only | [`install.ps1`](install.ps1) |
 | Windows enforce hook | — | [`style-reminder.ps1`](hooks/style-reminder.ps1) |
 | Hook reads style from | `~/.claude/settings.json` | full settings precedence |

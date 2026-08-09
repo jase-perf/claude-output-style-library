@@ -13,16 +13,16 @@ LICENSE file states it. Where the notice uses a handle, the person's name
 follows in parentheses. The bracket names the style that adapts the work.
 
 - Copyright (c) 2026 Serge Shima (`smixs`) — this collection
-- Copyright (c) 2026 Matt Pocock ([mattpocock/skills](https://github.com/mattpocock/skills)) — [`plain-english`]
-- Copyright (c) 2026 Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`caveman`]
-- Copyright (c) 2026 Carlos Mello (Carlos Duplar Mello, [carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`caveman`]
-- Copyright (c) 2026 Ayoub Ghriss ([ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)) — [`adhd`]
-- Copyright (c) 2026 AminBlg (Amin Boulegroun, [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)) — [`plain-english`]
-- Copyright (c) 2026 Peter Yang ([petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)) — [`no-slop`]
-- Copyright (c) 2025 Siqi Chen ([blader/humanizer](https://github.com/blader/humanizer)) — [`no-slop`]
-- Copyright (c) 2026 Conor Bronsdon ([conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing)) — [`no-slop`]
-- Copyright (c) 2025 Hardik Pandya ([hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop)) — [`coach`]
-- Copyright (c) 2025 Sruthi Reddy ([sruthir28/enterprise-ai-skills](https://github.com/sruthir28/enterprise-ai-skills)) — [`executive`]
+- Copyright (c) 2026 Matt Pocock ([mattpocock/skills](https://github.com/mattpocock/skills)) — [`one-fact-per-sentence`]
+- Copyright (c) 2026 Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`short-answers`]
+- Copyright (c) 2026 Carlos Mello (Carlos Duplar Mello, [carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`short-answers`]
+- Copyright (c) 2026 Ayoub Ghriss ([ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)) — [`where-we-are`]
+- Copyright (c) 2026 AminBlg (Amin Boulegroun, [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)) — [`one-fact-per-sentence`]
+- Copyright (c) 2026 Peter Yang ([petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop)) — [`plain-prose`]
+- Copyright (c) 2025 Siqi Chen ([blader/humanizer](https://github.com/blader/humanizer)) — [`plain-prose`]
+- Copyright (c) 2026 Conor Bronsdon ([conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing)) — [`plain-prose`]
+- Copyright (c) 2025 Hardik Pandya ([hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop)) — [`plain-prose`]
+- Copyright (c) 2025 Sruthi Reddy ([sruthir28/enterprise-ai-skills](https://github.com/sruthir28/enterprise-ai-skills)) — [`decision-brief`]
 
 ## People credited below who appear elsewhere only as repo handles
 
@@ -34,7 +34,7 @@ to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
 
 ## Understand
 
-- **plain-english** — the [ASD-STE100 standard](https://www.asd-ste100.org/),
+- **one-fact-per-sentence** — the [ASD-STE100 standard](https://www.asd-ste100.org/),
   aerospace's controlled language since 1983; popularized for AI agents by
   [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) and
   [Matt Pocock's wait-what](https://github.com/mattpocock/skills) (both MIT).
@@ -44,43 +44,55 @@ to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
   and the two shipped near-identical worked examples. Pocock's grounding and
   re-pitch rules were left out, because `wait-what` began as a skill for
   re-explaining output that already exists, which is not this style's job.
-- **eli15** — ELI5 prompt research and r/explainlikeimfive house rules.
-- **analogy-engine** — grounded in IEEE ProComm on
+- **one-analogy** — grounded in IEEE ProComm on
   source/target/grounds/tension; Reijnierse et al. (JCOM 2025) on
   single-domain metaphors; the CMU "Communicating Technical Ideas" metaphor
-  checklist.
-- **feynman** — Richard Feynman's technique; the AI "skeptical student"
+  checklist. This style absorbed `eli15` in August 2026 and inherits its
+  lineage — ELI5 prompt research and the r/explainlikeimfive house rules —
+  along with the length bound that kept an explanation to something you could
+  paste into a message. `eli15` ran the same method less thoroughly; the only
+  variable a reader could perceive between them was length.
+- **your-turn** — Richard Feynman's technique; the AI "skeptical student"
   variant popularized by Feynman-prompt guides in the prompting community.
-- **thing-explainer** — Randall Munroe:
+- **small-words** — Randall Munroe:
   [Up Goer Five](https://xkcd.com/1133/), *Thing Explainer*, and the
   [Simple Writer](https://xkcd.com/simplewriter/) checker.
-- **ladder** — the progressive-explanation pattern shared widely on
-  r/PromptEngineering ("explain like I'm 5, then 15, then a professional").
+- *(removed August 2026)* **ladder** adapted the progressive-explanation
+  pattern from r/PromptEngineering ("explain like I'm 5, then 15, then a
+  professional"). It was cut as a concatenation of `small-words`,
+  `one-analogy` and a plain answer, at three times the length. No rule of it
+  survives elsewhere, so nothing here is claimed on its behalf.
 
 ## Business
 
-- **executive** — Barbara Minto's
+- **decision-brief** — Barbara Minto's
   [Pyramid Principle](https://www.barbaraminto.com/); BLUF (US military
   doctrine); consulting-skill formulations by
   [sruthir28/enterprise-ai-skills](https://github.com/sruthir28/enterprise-ai-skills)
   (MIT) and Joe Cotellese's BLUF-for-Claude-Code writeup.
-- **smart-brevity** — Smart Brevity: Jim VandeHei, Mike Allen, Roy Schwartz
-  (Axios).
-- **coach** — Hemingway App's operationalized rules; Paul Graham's
-  ["Write Like You Talk"](https://paulgraham.com/talk.html); the scoring-gate
-  idea from [hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop)
-  (MIT).
+- *(removed August 2026)* **smart-brevity** adapted Smart Brevity by Jim
+  VandeHei, Mike Allen and Roy Schwartz (Axios). Across four bake-off prompts
+  it and `decision-brief` opened with the same claim, listed the same facts in
+  the same order, and closed on the same point, differing only in which labels
+  sat over the list. `decision-brief` implements Minto rather than Axios, so
+  no rule of Smart Brevity is claimed to survive in it.
 
 ## Terse
 
-- **caveman** — [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
-  (the original skill, MIT) and
+- **short-answers** — the compression discipline of
+  [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (the
+  original skill, MIT) and
   [carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)
-  (the output-style formulation, MIT). Not for onboarding docs or
-  customer-facing copy — compressed fragments assume domain context.
-- **adhd** — [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)
+  (the output-style formulation, MIT), which this style absorbed in August
+  2026. What carried over is the part that did the work: a real answer-length
+  budget, answer-then-reason-then-next-step, whole words over invented
+  abbreviations, and the closing line naming what was not checked. What was
+  left behind is the caveman grammar — the dropped articles and bare
+  noun-verb fragments — which four bake-off prompts showed added no
+  information to the answer.
+- **where-we-are** — [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd)
   (MIT), itself adapted from *The Adult ADHD Tool Kit* (Ramsay & Rostain).
-- **no-slop** — Joe Cotellese's generic-sentence test; the pattern taxonomies
+- **plain-prose** — Joe Cotellese's generic-sentence test; the pattern taxonomies
   of [blader/humanizer](https://github.com/blader/humanizer) and
   [conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing)
   (both MIT). This style absorbed `no-ai-slop` in August 2026, so three rules
@@ -93,6 +105,16 @@ to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
   style governs how a sentence is built, not what position to take. A
   human-readable field guide to the 2026 Claude-isms it displaces:
   [claudisms-2026.md](claudisms-2026.md).
+
+  It also absorbed `coach` in August 2026, and with it one rule — criticism
+  arrives holding the fix. `coach` adapted Hemingway App's operationalized
+  rules, Paul Graham's
+  ["Write Like You Talk"](https://paulgraham.com/talk.html), and the
+  scoring-gate idea from
+  [hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop) (MIT),
+  whose notice now sits against this style. Its other mechanics were already
+  here or in `decision-brief`; what was left after subtracting them was a
+  register, and a register is not something a user can pick between.
 
 ---
 

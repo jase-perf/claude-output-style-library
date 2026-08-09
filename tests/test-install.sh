@@ -41,13 +41,18 @@ n_list=$(bash install.sh --list | wc -l | tr -d ' ')
 check "--list reports every style + style-maker" "$((n_disk + 1))" "$n_list"
 
 # --- single style installs and activates ------------------------------------
+# Pick the subject from --list rather than naming one. Hardcoded slugs made a
+# rename round turn this suite red -- the styles moved, the tests did not, and
+# the failure looked like an installer bug instead of a stale fixture.
+SUBJECT=$(bash install.sh --list | head -1)
+SUBJECT_NAME=$(sed -n 's/^name:[[:space:]]*//p' "output-styles/$SUBJECT.md" | head -1)
 D="$TMP/single"
-CLAUDE_DIR="$D" bash install.sh caveman >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh "$SUBJECT" >/dev/null 2>&1
 check "single style installs and exits 0" "0" "$?"
-check "single style file installed" "yes" "$([ -f "$D/output-styles/caveman.md" ] && echo yes || echo no)"
+check "single style file installed" "yes" "$([ -f "$D/output-styles/$SUBJECT.md" ] && echo yes || echo no)"
 if [ "$HAVE_PY" = 1 ]; then
   active=$(sed -n 's/.*"outputStyle"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$D/settings.json" 2>/dev/null | head -1)
-  check "single style is activated" "Caveman" "$active"
+  check "single style is activated" "$SUBJECT_NAME" "$active"
 else
   skip_case "single style is activated" "$NO_PY_REASON"
 fi
@@ -79,10 +84,10 @@ cat > "$D/settings.json" <<'JSON'
   "effortLevel": "xhigh"
 }
 JSON
-CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
+CLAUDE_DIR="$D" bash install.sh "$SUBJECT" --enforce >/dev/null 2>&1
 # The style file always installs; only the settings.json edit needs python3.
 check "merge run installs the style" "yes" \
-  "$([ -f "$D/output-styles/eli15.md" ] && echo yes || echo no)"
+  "$([ -f "$D/output-styles/$SUBJECT.md" ] && echo yes || echo no)"
 
 if [ "$HAVE_PY" = 1 ]; then
   for key in permissions hooks effortLevel; do
@@ -94,8 +99,8 @@ if [ "$HAVE_PY" = 1 ]; then
     "$(grep -q 'UserPromptSubmit' "$D/settings.json" && echo yes || echo no)"
 
   # --- re-running must not duplicate the hook -------------------------------
-  CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
-  CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1
+  CLAUDE_DIR="$D" bash install.sh "$SUBJECT" --enforce >/dev/null 2>&1
+  CLAUDE_DIR="$D" bash install.sh "$SUBJECT" --enforce >/dev/null 2>&1
   check "hook registered exactly once after 3 runs" "1" \
     "$(grep -c 'style-reminder.sh' "$D/settings.json" | tr -d ' ')"
 else
@@ -106,7 +111,7 @@ else
   check "no-python run leaves settings.json intact" "yes" \
     "$(grep -q 'echo hi' "$D/settings.json" && echo yes || echo no)"
   check "no-python run still exits 0" "0" \
-    "$(CLAUDE_DIR="$D" bash install.sh eli15 --enforce >/dev/null 2>&1; echo $?)"
+    "$(CLAUDE_DIR="$D" bash install.sh "$SUBJECT" --enforce >/dev/null 2>&1; echo $?)"
 fi
 
 printf '\n%s passed, %s failed, %s skipped\n' "$pass" "$fail" "$skip"

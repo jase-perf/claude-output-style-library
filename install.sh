@@ -2,7 +2,7 @@
 # awesome-claude-output-styles installer
 #
 # Install one style (and make it active):
-#   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
+#   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- plain-prose
 #
 # Install everything (nothing is activated, pick later via /config):
 #   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
@@ -13,7 +13,7 @@
 # Add --enforce to also install a UserPromptSubmit hook that re-reminds Claude
 # of the active style every turn (Claude Code only does this for built-in
 # styles; custom styles fade in long sessions without it):
-#   ... | bash -s -- eli15 --enforce
+#   ... | bash -s -- plain-prose --enforce
 set -euo pipefail
 
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
@@ -30,9 +30,9 @@ if command -v python3 >/dev/null 2>&1 && python3 -c '' >/dev/null 2>&1; then
 fi
 
 STYLES=(
-  plain-english eli15 analogy-engine feynman thing-explainer ladder
-  executive smart-brevity coach
-  caveman adhd no-slop
+  one-fact-per-sentence small-words one-analogy your-turn
+  decision-brief where-we-are
+  plain-prose short-answers
 )
 
 usage() {

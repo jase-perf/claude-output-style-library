@@ -16,7 +16,7 @@
 
 .EXAMPLE
   # Pass arguments (irm | iex cannot take parameters, so wrap in a scriptblock)
-  & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style eli15 -Enforce
+  & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style plain-prose -Enforce
 
 .EXAMPLE
   # From a local checkout
@@ -46,9 +46,9 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'   # the progress bar makes downloads ~10x slower
 
 $STYLES = @(
-    'plain-english', 'eli15', 'analogy-engine', 'feynman', 'thing-explainer', 'ladder',
-    'executive', 'smart-brevity', 'coach',
-    'caveman', 'adhd', 'no-slop'
+    'one-fact-per-sentence', 'small-words', 'one-analogy', 'your-turn',
+    'decision-brief', 'where-we-are',
+    'plain-prose', 'short-answers'
 )
 
 $ClaudeDir = if ($env:CLAUDE_DIR) { $env:CLAUDE_DIR } else { Join-Path $env:USERPROFILE '.claude' }
