@@ -3,9 +3,13 @@
 A reader's reference for the writing patterns Claude Opus 4.8/5 became
 infamous for in mid-2026. This list exists for humans — reviewers, editors,
 people wondering "is it just me?". It is deliberately NOT pasted into any
-style file in this repo: instruction-tuned models tend to reproduce tokens
-you mention, even inside a ban. The `no-slop` style fights these patterns by
-describing the opposite voice in positives.
+style file in this repo: a banlist this long would spend system-prompt budget
+in every session to state negatively what a style can state positively in a
+fraction of the space. The `plain-prose` style displaces these patterns by
+describing the opposite voice. (An earlier version of this note claimed
+instruction-tuned models reproduce tokens you mention even inside a ban. That
+does not hold for frontier models — see
+[design-decisions.md](design-decisions.md#1-no-banned-word-lists--but-not-for-the-reason-everyone-gives).)
 
 Documented across GitHub issue anthropics/claude-code#77136, the July–August
 2026 Reddit threads, HN discussions, and the "Claudish" essay (slhck.info).
