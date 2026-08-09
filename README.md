@@ -238,10 +238,23 @@ Switching back: `/config` → **Output style** → `Default`.
 
 ### Make it stick: `--enforce`
 
-Claude Code reinforces its **built-in** styles every single turn — but never
-custom ones, so custom voices fade over a long session. Add the enforce flag to
-any install command and a tiny `UserPromptSubmit` hook gives whatever style you
-have active the same per-turn reinforcement:
+A custom style is read once, at session start. Add the enforce flag to any
+install command and a tiny `UserPromptSubmit` hook re-states the active style
+on every turn:
+
+> [!NOTE]
+> **The evidence here conflicts, so this ships opt-in.** Claude Code's
+> [output styles docs](https://code.claude.com/docs/en/output-styles) say
+> "**All** output styles trigger reminders for Claude to adhere to the output
+> style instructions during the conversation" — which would make this hook
+> redundant. Against that: reading the shipped binary shows the reminder
+> consumer looking up a **built-ins-only** table and returning nothing for a
+> custom style, and no such reminder has been observed in practice.
+>
+> We have not run a controlled test, so we are not claiming the docs are
+> wrong. **Turn this on if you notice your style fading in long
+> conversations**, which is the symptom either way. It costs one short line
+> per turn.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15 --enforce
