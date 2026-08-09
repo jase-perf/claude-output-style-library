@@ -108,14 +108,18 @@ and the two places a style needed a second run.
 
 <tr><td valign="top">
 
-**[`where-we-are`](output-styles/where-we-are.md)**<br><sub>The next action on line one, for work that runs long.<br><em>Asked a different question — see below.</em></sub>
+**[`where-we-are`](output-styles/where-we-are.md)**<br><sub>The next action on line one, then a literal <code>Where we are:</code> line, for work that runs long or gets handed on.<br><em>Asked a different question — see below.</em></sub>
 
 </td><td valign="top">
 
-> Pause the backfill — or throttle it hard — before anything else. It's
-> reversible, takes effect immediately, and it's also your diagnostic: what
-> happens to insert latency in the next few minutes tells you which of the two
-> likely causes you have.
+> Pause or heavily throttle the backfill and watch insert p99 for 10–15 minutes
+> — that single measurement splits the problem in two and costs you almost
+> nothing at 60% done.
+>
+> Where we are: backfill ~60% complete, insert latency ~2x baseline, cause not
+> yet isolated; nothing has been changed yet, and nothing here says revert — at
+> 60% done, pushing through is almost always cheaper than backing out unless
+> you're breaching SLO right now.
 
 </td></tr>
 
@@ -190,11 +194,13 @@ bullets at all, or an analogy that tells you where it stops being true.
 
 Two things that table is honest about. `where-we-are` was asked about a
 migration already in flight, because its rules describe a session already
-underway and a one-shot question gives it no state to restate. And
-`one-analogy` and `one-fact-per-sentence` each reverted to the default register
-on their first run and held on the second — style adherence is strong, not
-deterministic, which is also the case for the optional
-[`--enforce`](#make-it-stick---enforce) hook.
+underway and a one-shot question gives it no state to restate — and it is the
+least reliable of the eight, producing its state line on roughly a third of
+runs. And `one-analogy` and `one-fact-per-sentence` each reverted to the
+default register on their first run and held on the second. Adherence is
+strong, not deterministic, which is what the optional
+[`--enforce`](#make-it-stick---enforce) hook exists for. The measurements are
+in [docs/examples.md](docs/examples.md).
 
 ## Why this works when a CLAUDE.md rule doesn't
 
@@ -258,6 +264,21 @@ message to someone who was not in the session.
 |---|---|
 | [`decision-brief`](output-styles/decision-brief.md) | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
 | [`where-we-are`](output-styles/where-we-are.md) | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
+
+> [!NOTE]
+> **`where-we-are` overlaps a built-in, so check you need it.** Claude Code
+> ships [session recap](https://code.claude.com/docs/en/interactive-mode#session-recap):
+> a one-line summary of where the session stands, on by default, generated after
+> you have been away three minutes or so, and available on demand with `/recap`.
+> If you only want *"I stepped away, what was I doing"*, use that — it is real
+> code with real triggers rather than an instruction the model has to remember.
+>
+> Reach for the style when you need what recap does not give you: the state on
+> **every** answer rather than after an absence, **inside the response text** so
+> it survives a paste into a PR or a handover note, and **outside the terminal**
+> — recap does not surface in the IDE extensions, and the docs state it is
+> always skipped in non-interactive mode, so `claude -p`, scripts, and CI never
+> see one. The two fail in different directions; running both is reasonable.
 
 ### Explaining to someone
 

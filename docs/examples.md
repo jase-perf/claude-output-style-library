@@ -28,8 +28,10 @@ claude -p "Should I use a UUID or an auto-increment integer for a primary key?" 
    20-word sentences in the other. The second run of each is what appears below.
    Style adherence is not deterministic, and pretending otherwise would be the
    kind of claim this library exists to stop.
-2. `where-we-are` answers a **different question**, and did not fully hold its
-   format on either. See its section for why.
+2. `where-we-are` answers a **different question**, and holds its format on
+   roughly a third of runs even after being rewritten to demand a literal
+   marker. Its section carries the full numbers, the reason a one-shot test is
+   unfair to it, and how it relates to Claude Code's built-in `/recap`.
 
 ## The question
 
@@ -205,37 +207,85 @@ stops on a question with the exit printed next to it.
 
 ## where-we-are
 
-This style answers a different question, for a reason worth stating plainly.
+This style answers a different question and needs the most explanation, so it
+gets a section rather than a caption.
 
-Asked the UUID question, `where-we-are` produced ordinary prose on both attempts
-— no action line, no state line. That is not a defect so much as a mismatch: its
-rules describe a session that is already underway ("restate current state each
-turn", "the reader should never scroll up to reorient"), and a one-shot question
-gives it no state to restate. So it was asked something with work in flight:
+### Why a different question
+
+Asked the UUID question, it produced ordinary prose. Its rules describe a
+session already underway, and a one-shot question gives it no state to restate.
+So it was asked something with work in flight:
 
 > We are partway through switching the orders table to UUIDv7 primary keys. The
 > backfill is about 60% done and insert latency has roughly doubled. What now?
 
 It answered:
 
-> Pause the backfill — or throttle it hard — before anything else. It's reversible, takes effect immediately, and it's also your diagnostic: what happens to insert latency in the next few minutes tells you which of the two likely causes you have.
+> Pause or heavily throttle the backfill and watch insert p99 for 10–15 minutes — that single measurement splits the problem in two and costs you almost nothing at 60% done.
 >
-> **If latency recovers after pausing**, the backfill itself is the problem — contention, not the new key. The usual mechanisms:
+> Where we are: backfill ~60% complete, insert latency ~2x baseline, cause not yet isolated; nothing has been changed yet, and nothing here says revert — at 60% done, pushing through is almost always cheaper than backing out unless you're breaching SLO right now.
 >
-> - Every backfill batch is an UPDATE, and in Postgres that means a full new row version plus a write to the new UUID index (the update can't be HOT once the column is indexed). At 60% through an orders table, that's a lot of WAL, checkpoint pressure, and dead tuples for autovacuum to chase.
-> - If the backfill generates UUIDv7s from the current clock, every backfilled value lands on the same right-hand edge of the index as your live inserts — old rows and new orders are fighting over the same hot pages. Deriving the timestamp bits from each row's original `created_at` instead spreads backfill writes across the cold part of the index. It also gives you the ordering property you presumably wanted UUIDv7 for. The 60% already written with now-based values is functionally fine (they're still unique), just not time-ordered for historical rows — decide whether that inconsistency matters before switching, and if it does, plan to re-backfill the first 60%.
+> The two possible causes, and what each means:
 >
-> The fix in this branch is pacing, not abandonment: smaller batches (1–10k rows), a sleep between batches sized so replication lag and dead-tuple counts stay flat, more aggressive autovacuum settings on this one table, and heavier batches shifted off-peak. Resuming at that pace costs calendar time, not correctness.
+> 1. **If latency recovers when the backfill pauses**, it's contention: the backfill is competing with live inserts for I/O, buffer pool, and WAL bandwidth. This is transient and ends when the backfill ends. Resume at a lower rate — smaller batches (1k–10k rows), a short sleep between batches, walk the table in existing primary-key order for locality, and shift the heavy portion off-peak. Also check checkpoint frequency (`checkpoints_req` climbing in `pg_stat_bgwriter` means WAL pressure — raising `max_wal_size` for the migration window helps).
+> 2. **If latency stays doubled while paused**, the cost is structural — it's the migration scaffolding, not the backfill. The usual suspects, in order of likelihood:
+>     - **The unique index on the new UUID column already exists during backfill.** In Postgres this is the classic trap: updating an indexed column disqualifies HOT updates, so every backfilled row rewrites entries in *every* index on `orders`, and every live insert maintains one more index than before. If you can, drop that index now and build it with `CREATE UNIQUE INDEX CONCURRENTLY` after the backfill finishes.
+>     - **A dual-write trigger** adding per-insert cost — check its body for anything that does a lookup rather than a pure computation.
+>     - **Autovacuum falling behind** the update churn — check `n_dead_tup` on `orders`; a manual `VACUUM (ANALYZE)` between backfill phases is cheap insurance.
 >
-> **If latency stays doubled with the backfill paused**, the cost is in the write path itself, and throttling won't help. Look at what each insert now pays: the extra unique index on the UUID column, any sync trigger you added for dual-writes, and any new foreign-key checks on child tables. An extra index alone shouldn't double latency on a healthy table, so if this is your branch, check for index or table bloat from the backfill so far — a `REINDEX CONCURRENTLY` on the new index or a round of aggressive vacuuming may claw most of it back.
+> One assumption to flag: this is written for Postgres. If you're on MySQL/InnoDB the index-maintenance point still holds but the HOT-update mechanics don't — tell me the engine and I'll adjust.
 >
-> Either way, don't roll back at 60% on latency alone unless it's actually breaching your SLO — check p99 against your budget, not against last week's baseline. The doubled latency is almost certainly a migration-time cost, not the steady-state price of UUIDv7; time-ordered UUIDs specifically avoid the random-insert B-tree pain that made UUIDv4 keys expensive.
->
-> If you tell me the engine (Postgres vs. MySQL), how the dual-write is wired (trigger, app-level, or generated column), and how the backfill batches are structured, I can get more specific about where the doubling is coming from.
+> (Separate topic worth deciding soon but not today: whether the old PK index survives cutover or gets dropped — that's where the doubled write amplification permanently goes away.)
 
-Rule 1 holds — the first line is the next action, and it is reversible and
-diagnostic at once. The rest of the format does not appear: no one-line state
-summary, no numbered steps, no time estimates. Of the eight styles this is the
-one that most depends on a real multi-turn session, which a single `claude -p`
-call cannot reproduce. Read the excerpt as one turn of a longer job, not as the
-style at full strength.
+Nearly every rule fires here: the next action on line one, the `Where we are:`
+line under it, numbered steps, a time cost in minutes rather than "quickly", and
+the tangent parked in a single parenthetical instead of derailing the answer.
+
+### It is also the least reliable of the eight, and that is measured
+
+The state line originally read "restate current state in one line each turn". It
+never once appeared. Rewriting it to demand the literal string `Where we are:`
+helped, and did not fix it:
+
+| Wording | Produced the line |
+| --- | --- |
+| "Restate current state in one line each turn" | 0 of 3 runs |
+| Literal `Where we are:` required, as rule 2 | 2 of 4 runs |
+| …plus an explicit carve-out from the no-preamble rule | 1 of 4 runs |
+| Merged with the next-action rule into rule 1 (what ships) | 2 of 5 runs |
+
+Roughly 38% across thirteen runs of the strengthened wordings, against zero
+before. The three strengthened variants are indistinguishable at this sample
+size; the one that ships was chosen for being the shortest and for putting both
+signature behaviours in the first rule, not because the numbers separated it.
+
+Two caveats that cut in this style's favour. Every run above is a single
+`claude -p` call, which is the worst case for a style whose whole premise is
+accumulated state — there is no previous turn to summarise. And none of these
+runs used the [`--enforce` hook](enforce-hook.md), which re-states the active
+style every turn and exists for exactly this failure mode; in a one-shot call it
+has nothing to reinforce across.
+
+### When you want this and `/recap` is not enough
+
+Claude Code has a built-in [session
+recap](https://code.claude.com/docs/en/interactive-mode#session-recap): a
+one-line summary of where the session stands, on by default, generated in the
+background after at least three minutes away from an unfocused terminal, in
+sessions of at least three turns, never twice in a row. `/recap` forces one.
+For "I stepped away, what was I doing" it is better than this style — it is real
+code with real triggers, not an instruction a model has to remember.
+
+This style covers what recap does not:
+
+- **Every answer, not after a three-minute absence.** Recap is built for
+  returning; this is built for reading the answer in front of you.
+- **In the response text, so it travels.** Recap is terminal UI. The
+  `Where we are:` line is part of the answer, so it survives a paste into a PR
+  description, a Slack message, or a handover note.
+- **Outside the terminal.** Recap does not surface in the IDE extensions, and
+  the documentation states it is always skipped in non-interactive mode — so
+  `claude -p`, scripted runs, and CI never see one. A style is system prompt and
+  applies everywhere.
+
+Use both. They fail in different directions.
