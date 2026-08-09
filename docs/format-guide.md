@@ -106,6 +106,14 @@ too.
    | Llama-2-13B-Chat | 0.33 | 0.25 | helps |
    | GPT-4 | 0.33 | 0.13 | helps most, −61% relative |
 
+   *If you check that table against the paper:* its caption ("Rate at which
+   the model talks about the Pink Elephant, lower is better") and the bullet
+   defining the same column ("proportion of examples where the model
+   successfully refrained") point in opposite directions. The caption, the
+   narrative text, and the signed deltas in both Table 1 and the appendix all
+   agree with each other, so the reading above is the right one — but the
+   contradiction is in the source, not in this summary.
+
    The effect exists only in the weakest model tested and reverses with
    capability. Prefer positive framing because it is first-party guidance and
    because a described target is more directly actionable than a list of

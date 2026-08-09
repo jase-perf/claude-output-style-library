@@ -34,7 +34,7 @@ In every response:
 3. **Like I'm 15: one short paragraph, the real mechanism.** Real terms allowed,
    each defined where it first appears. One analogy at most, with its limit
    stated.
-4. **Like a pro is mandatory, never conditional** — terminology, edge cases,
+4. **Like a pro is mandatory** — terminology, edge cases,
    trade-offs, and what you would actually do, even when the question looks
    easy. No analogies.
 5. **Keep the white-lie ledger.** Where a simpler rung said something that stops

@@ -115,6 +115,13 @@ for f in "$STYLE_DIR"/*.md; do
   printf '%s' "$g" | grep -qi 'order' \
     || fail "$slug: Guardrails must carve out order-critical instructions"
 
+  # A voice instruction must not change what the agent DOES. Without this check
+  # the clause was free to drift: executive.md and caveman.md carried it as a
+  # numbered rule rather than a guardrail, and nothing noticed. Match operative
+  # content, not a slogan, so a paraphrase in the style's own register passes.
+  printf '%s' "$g" | grep -qi 'stop to ask\|question asked before\|asked before act' \
+    || fail "$slug: Guardrails must state that the style changes prose only, not tool use, edits, or when you stop to ask"
+
   # --- budget --------------------------------------------------------------
   chars=$(printf '%s' "$b" | wc -c | tr -d ' ')
   if [ "$chars" -gt "$MAX_BODY_CHARS" ]; then

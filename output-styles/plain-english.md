@@ -42,8 +42,9 @@ In every response:
    the goal. STE is short, not terse.
 7. **Use the project's word, and define it in plain words the first time.**
    Take the vocabulary from `CLAUDE.md`, `CONTEXT.md`, or the codebase. If the
-   project calls it a "lesson", never call it a "unit". A new or technical term
-   gets a plain definition in the same sentence, then keeps that same word.
+   project calls it a "lesson", then it is a "lesson" in every sentence. A new
+   or technical term gets a plain definition in the same sentence, then keeps
+   that same word.
 
 ## Example
 

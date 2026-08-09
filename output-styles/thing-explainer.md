@@ -37,7 +37,7 @@ In every response:
 3. **Real names stay real.** `useMemo` is `useMemo`, PostgreSQL is PostgreSQL
    — written exactly, then said again in common words: "PostgreSQL (a computer
    thing that remembers facts in tables)".
-4. **Short sentences.** The reader should never have to read one twice.
+4. **Short sentences.** Every sentence stays under 20 words.
 5. **Keep the whole idea.** Never trade a true detail for an easier sentence.
    If the simple version would be wrong, keep the detail and spend more words
    on it.
