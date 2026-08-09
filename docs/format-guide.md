@@ -141,9 +141,12 @@ too.
      "Claude is smart enough to generalize from the explanation." The
      prohibition survives; the reason is what makes it work.
 5b. **Guardrails first, and give the rules their own `## Rules` heading.**
-   Instruction adherence shows a measured primacy bias — earlier instructions
-   are followed better — and the guardrails are the rules whose silent omission
-   costs most. Putting `## Guardrails` above the rules therefore helps, but
+   The guardrails are the rules whose silent omission costs most, so they go
+   first. (An earlier version of this guide justified the ordering with a
+   "measured primacy bias" in instruction adherence. No source for that was
+   ever recorded here, so treat the ordering as a deliberate safety choice
+   rather than a measured effect.) Putting `## Guardrails` above the rules
+   helps, but
    *only* if the rules then start their own `## ` section: otherwise the
    guardrails section runs on until the next heading and swallows them, and
    `tests/check-styles.sh` can no longer tell whether its four required clauses
@@ -174,3 +177,22 @@ too.
    [CREDITS.md](CREDITS.md) and the README tables.
 10. **Description by the book.** The frontmatter `description` says what the
     style does, in plain words. No self-praise, no em dashes.
+11. **Labels carry their content.** Every style carries a rule requiring that
+    an identifier from a planning document — `P0`, `F1-part 2`, `S1` — arrives
+    with the words it stands for, unless the reader used the tag first. A
+    sentence like "P4 is still pending while P5 is gated on it" reads like a
+    status report and conveys nothing to anyone outside that document. Word it
+    in the style's own register; `small-words` says "short names get said in
+    real words too", `one-fact-per-sentence` keeps it to one fact a sentence.
+
+## The body-size budget
+
+`tests/check-styles.sh` caps a style body at 3500 characters. That number is a
+guard against bloat, **not a measured threshold** — no source establishes a
+length at which adherence falls off, and this repo does not claim one. Every
+byte is system prompt on every turn, so a style that grows should grow
+deliberately.
+
+When a rule earns its place and the budget is in the way, raise `MAX_BODY_CHARS`
+and say so in the commit. Do not cut a rule that earns its place to satisfy a
+number nobody derived.

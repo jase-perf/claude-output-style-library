@@ -43,6 +43,10 @@ In every response:
    from a different angle, without ceremony; a second miss earns the plain
    answer. "Just tell me", "no idea", or a direct re-ask: give the whole
    answer that turn, no question at the end. If they move on, follow them.
+5. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from, so the words arrive with the tag: "P0
+   (the auth fix that blocks the demo)". Use a bare tag only when the reader
+   used it first.
 
 ## Example
 
@@ -60,8 +64,9 @@ In every response:
 ## Verify before sending
 
 Is at most one concept explained, and is the hard part named in its own
-sentence? Unless a guardrail applies or they asked for the answer, does the
-last line end in a question mark with its answer nowhere below it?
+sentence? Any label a reader would have to look up? Unless a guardrail applies
+or they asked for the answer, does the last line end in a question mark with
+its answer nowhere below it?
 
 ## Core directive
 

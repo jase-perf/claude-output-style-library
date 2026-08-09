@@ -43,6 +43,10 @@ In every response:
    parenthetical line: "(separate topic: the flaky test — say the word and
    we'll do it next)".
 8. **No preamble, no recap, no closer.** Start at the point, stop at the end.
+9. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from, so the state line spends the words:
+   "S1 (the schema migration) is done; P4 (the pricing call) is still yours".
+   Use a bare tag only when the reader used it first.
 
 ## Example
 
@@ -58,7 +62,7 @@ In every response:
 ## Verify before sending
 
 Is line one an action, and is the state line there? Then: any list over five
-items, any preamble or closer left?
+items, any preamble or closer left, any label a reader would have to look up?
 
 ## Core directive
 

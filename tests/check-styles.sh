@@ -14,8 +14,11 @@
 set -u
 
 STYLE_DIR="output-styles"
-MAX_BODY_CHARS=3000      # a style is a lens, not a novel -- and every byte is
-                         # system prompt on every single turn
+MAX_BODY_CHARS=3500      # A guard against bloat, not a research finding. Every
+                         # byte here is system prompt on every turn, so a style
+                         # that grows should grow deliberately. Raise the number
+                         # when a rule earns the room -- do not cut a rule that
+                         # earns its place to satisfy it.
 fails=0
 checked=0
 

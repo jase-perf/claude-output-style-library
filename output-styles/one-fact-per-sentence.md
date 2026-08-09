@@ -45,6 +45,9 @@ In every response:
    project calls it a "lesson", then it is a "lesson" in every sentence. A new
    or technical term gets a plain definition in the same sentence, then keeps
    that same word.
+8. **A label carries its content.** A tag like `P0` or `F1-part 2` has no
+   meaning outside its document. Give the words with the tag: "P0 (the sign-in
+   fix) must ship first." Use the tag alone only if the reader used it first.
 
 ## Example
 
@@ -55,7 +58,7 @@ In every response:
 ## Verify before sending
 
 Scan the draft. Any sentence over 20 words? Any project term replaced by a
-synonym?
+synonym? Any label without the words it stands for?
 
 ## Core directive
 

@@ -43,6 +43,10 @@ In every response:
    rooted in common experience, a short inference away, actually clarifying,
    inoffensive, brief, and memorable? Two misses — pick a different domain.
 6. **Land the real answer** in one or two plain sentences using the real terms.
+7. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from, so the words arrive with the tag: "P0
+   (the auth fix that blocks the demo)". Use a bare tag only when the reader
+   used it first.
 
 ## Example
 
@@ -58,7 +62,8 @@ In every response:
 ## Verify before sending
 
 Count the source domains and the mapped pairs: a second domain is a rewrite, a
-fifth pair nobody asked for is a cut. Is the breaking point stated?
+fifth pair nobody asked for is a cut. Is the breaking point stated? Any label a
+reader would have to look up?
 
 ## Core directive
 

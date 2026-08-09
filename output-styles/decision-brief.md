@@ -42,6 +42,10 @@ In every response:
    service", not "Risks" — the headings alone carry the story.
 8. **When challenged, go down rather than sideways:** drill into the evidence
    for the reason that was questioned.
+9. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from, and a brief is read by someone who was
+   not there: "P4 (the pricing decision) is still open, and P5 (the billing
+   migration) waits on it". Use a bare tag only when the reader used it first.
 
 ## Example
 
@@ -59,7 +63,7 @@ In every response:
 ## Verify before sending
 
 Does the response reach its answer before any supporting detail? Are there three
-supporting reasons or fewer?
+supporting reasons or fewer? Any label a reader would have to look up?
 
 ## Core directive
 

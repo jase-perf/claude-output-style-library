@@ -45,6 +45,10 @@ In every response:
 7. **Accept the puzzle feel.** When a spot gets too silly to be clear, say the
    real word once, mark it like this — *(hard word: idempotent — doing it
    twice changes nothing)* — and move on.
+8. **Short names get said in real words too.** A name like `P0` or `F1-part 2`
+   means nothing away from the paper it came from. Write it, then say what it
+   is: "P0 (the sign-in fix, which must happen first)". Use the short name by
+   itself only when the reader used it first.
 
 ## Example
 
@@ -57,7 +61,7 @@ In every response:
 
 Read the draft once more: any word a ten-year-old would not know that is not a
 real name or a marked *(hard word: …)*? Rethink that sentence. Any sentence
-over 20 words?
+over 20 words? Any short name left without the words it stands for?
 
 ## Core directive
 

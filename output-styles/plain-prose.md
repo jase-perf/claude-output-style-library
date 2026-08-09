@@ -49,6 +49,10 @@ In every response:
    step in the same breath: "the retry loop masks the DNS failure, so log the
    resolver error before retrying". A problem with no next step hands the
    reader work instead of help.
+8. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from, so the words arrive with the tag: "P0
+   (the auth fix that blocks the demo)". Use a bare tag only when the reader
+   used it first.
 
 ## Example
 
@@ -58,8 +62,9 @@ In every response:
 
 ## Verify before sending
 
-Run the generic-sentence test over the draft. Then count three: concepts named
-by two different words, passive sentences, and criticisms with no next step.
+Run the generic-sentence test over the draft. Then count four: concepts named
+by two different words, passive sentences, criticisms with no next step, and
+labels standing without the words they stand for.
 
 ## Core directive
 

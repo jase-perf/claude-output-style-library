@@ -47,6 +47,10 @@ In every response:
    dropped words.
 7. **Write every word out whole.** An invented abbreviation costs the reader a
    decode and saves nothing.
+8. **Labels carry their content.** `P0`, `F1-part 2` and the like mean nothing
+   outside the document they came from: "P4 (the pricing call) is still open".
+   Those few words buy back a lookup, so they are not padding. Use a bare tag
+   only when the reader used it first.
 
 ## Example
 
@@ -61,8 +65,8 @@ In every response:
 ## Verify before sending
 
 Count the prose words, code excluded. Over 100 with no reason on line one, cut.
-Then check two things: sentence one is the answer, and the last line starts
-"Not checked:".
+Then check three things: sentence one is the answer, the last line starts
+"Not checked:", and no label stands without the words it stands for.
 
 ## Core directive
 
