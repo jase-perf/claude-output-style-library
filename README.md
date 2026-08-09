@@ -39,7 +39,7 @@
 > [smixs/awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles)
 > by Serge Shima, and owes it the original idea, the format guide, and the first
 > draft of most styles here.** It has since diverged enough to stand on its own:
-> 19 styles became 12, every one of them rewritten against a spec that did not
+> 19 styles became 8, every one of them rewritten against a spec that did not
 > exist upstream, plus a Windows installer, a bug fix in the enforce hook, four
 > test suites and CI across three operating systems.
 >
@@ -87,44 +87,58 @@ The same answer, four voices:
 <tr><th width="34%" align="left">Voice</th><th align="left">Same answer</th></tr>
 <tr><td valign="top">
 
-**`plain-english`**<br><sub>ASD-STE100, plus **[Matt Pocock](https://github.com/mattpocock/skills)** ([@mattpocockuk](https://x.com/mattpocockuk)) on your project's vocabulary</sub>
+**`plain-prose`**<br><sub>the school of [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) and [Peter Yang](https://github.com/petergyang/no-ai-slop) ([@petergyang](https://x.com/petergyang))</sub>
 
 </td><td valign="top">
 
-> Your code creates a new object on each render. React sees a new object and
-> draws again. Wrap the object in `useMemo`. Then React gets the same object
-> and does not draw again.
+> The child re-renders because its parent did, not because the prop changed —
+> React re-renders children unconditionally. Wrapping the child in
+> `React.memo` makes it skip when props are shallow-equal, but an inline
+> object is a new reference every render, so that comparison always fails.
+> `useMemo` on the object keeps the reference stable and the memo starts
+> doing its job.
 
 </td></tr>
 <tr><td valign="top">
 
-**`caveman`**<br><sub>after [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)), 95k★</sub>
+**`short-answers`**<br><sub>the compression discipline of [Julius Brussee](https://github.com/JuliusBrussee/caveman) ([@julius_brussee](https://x.com/julius_brussee)), without the grammar</sub>
 
 </td><td valign="top">
 
-> New object ref each render. Inline object prop = new ref = re-render. Wrap
-> in `useMemo`. Done.
+> You need both: `React.memo` on the child and `useMemo` on the object. React
+> re-renders children whenever the parent renders; `memo` opts out of that,
+> and an inline object defeats `memo` by arriving as a new reference each
+> time.
+>
+> Not checked: whether the child is already memoised. If it isn't, `useMemo`
+> alone changes nothing.
 
 </td></tr>
 <tr><td valign="top">
 
-**`no-slop`**<br><sub>the school of [Siqi Chen](https://github.com/blader/humanizer) ([@blader](https://x.com/blader)) and [Peter Yang](https://github.com/petergyang/no-ai-slop) ([@petergyang](https://x.com/petergyang)) — the anti-Claudism voice</sub>
+**`small-words`**<br><sub>after [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*)</sub>
 
 </td><td valign="top">
 
-> The component re-renders because the prop object is new each time, not
-> because its contents changed. React checks identity, not contents. Wrap
-> the object in `useMemo` and the identity stays stable.
+> The part that draws is told to draw again every time the part above it
+> draws. You can ask it to check first and skip the work when nothing it was
+> handed has changed. But you hand it a new box each time, even when the
+> things inside are the same, so the check always says "this is new". Hand it
+> the same box and the check starts helping.
 
 </td></tr>
 <tr><td valign="top">
 
-**`adhd`**<br><sub>after [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd)'s i-have-adhd, 17k★</sub>
+**`your-turn`**<br><sub>Richard Feynman's technique — it stops before the answer</sub>
 
 </td><td valign="top">
 
-> Wrap the inline object in `useMemo` — that stops the re-renders (~2 min).
-> Why: a new object every render makes React think the prop changed.
+> Here is the part that trips almost everyone: React does not compare props to
+> decide whether to re-render a child. It re-renders children whenever the
+> parent renders, full stop. Comparison only happens if you opt in to it.
+>
+> So you added `useMemo` to the object and nothing changed. Given that, what
+> do you think is still missing?
 
 </td></tr>
 </table>
@@ -145,7 +159,7 @@ The same answer, four voices:
 One style (installs **and** activates it):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- plain-prose
 ```
 
 Everything (installs all 8 + the style-maker skill; activate later via `/config`):
@@ -162,7 +176,7 @@ no dependencies. It uses only built-in PowerShell: no curl, no bash, no python.
 One style (installs **and** activates it):
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style eli15
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style plain-prose
 ```
 
 Everything:
@@ -257,11 +271,11 @@ on every turn:
 > per turn.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- eli15 --enforce
+curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- plain-prose --enforce
 ```
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style eli15 -Enforce
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -Style plain-prose -Enforce
 ```
 
 macOS/Linux get [`style-reminder.sh`](hooks/style-reminder.sh); Windows gets
@@ -455,7 +469,7 @@ acronym any more.
 *Analysing Zero-Shot Readability-Controlled Sentence Simplification*
 ([arXiv:2409.20246](https://arxiv.org/abs/2409.20246), COLING 2025) found that
 "all tested models struggle to simplify sentences (especially to the lowest
-levels)" — the exact thing `ladder`'s bottom rung and `thing-explainer` ask
+levels)" — the exact thing `small-words` asks
 for. So those two do not trust the instruction to hold; they end with a
 countable self-check on the draft's shape.
 
@@ -463,8 +477,8 @@ Every source above was read at the source, not through a summary of it. Claims
 that reached this repo through research notes and did not survive that check
 were removed rather than softened — including one this README used to make.
 
-Everything else — the Minto Pyramid, ASD-STE100, the Feynman technique, Smart
-Brevity — is **established practice, not measured effect**. Those methods have
+Everything else — the Minto Pyramid, ASD-STE100, the Feynman technique — is
+**established practice, not measured effect**.
 decades of use behind them and are credited to their authors in
 [docs/CREDITS.md](docs/CREDITS.md). They are not evidence that this library's
 implementations of them work better than the alternatives.
@@ -473,7 +487,7 @@ implementations of them work better than the alternatives.
 better output than an unstyled Claude. The tests verify structure, the reviews
 verify craft, and the citations support specific design choices. None of that
 is an efficacy result, and calling it one would be the exact failure the
-`no-slop` style exists to prevent.
+`plain-prose` style exists to prevent.
 
 ## The wider catalog
 
@@ -550,9 +564,10 @@ The five persona styles — `street`, `gen-z`, `sportscaster`, `yoda`,
 simply the wrong default for a library people install at work, and a catalog
 reads as serious or it doesn't. They remain available upstream, unmodified.
 
-`caveman` stays despite the name: compressed technical fragments are a real
-practice with a real readership, and its guardrails are as strict as any other
-style's.
+`short-answers` covers the terse-technical case upstream's `caveman` served,
+without the dropped-articles register: compressed output is a real practice
+with a real readership, and four bake-off prompts showed the grammar joke was
+never the useful part.
 
 ### 1. A real Windows installer
 

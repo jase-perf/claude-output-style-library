@@ -157,5 +157,21 @@ for f in "$STYLE_DIR"/*.md; do
     || fail "$slug: no entry in docs/CREDITS.md"
 done
 
+# --- the README table tracks what actually ships ----------------------------
+# Twice now the README has shipped stale: once advertising descriptions the
+# files no longer had, once linking styles that had been renamed or deleted.
+# CI passed both times, because nothing compared prose to disk. Now it does.
+printf 'README\n'
+for f in "$STYLE_DIR"/*.md; do
+  slug=$(basename "$f" .md)
+  grep -q "(output-styles/$slug\.md)" README.md \
+    || fail "$slug: ships but has no row in the README table"
+done
+readme_links=$(sed -n 's|.*(output-styles/\([a-z0-9-]*\)\.md).*|\1|p' README.md | sort -u)
+for slug in $readme_links; do
+  [ -f "$STYLE_DIR/$slug.md" ] \
+    || fail "README links output-styles/$slug.md, which does not exist"
+done
+
 printf '\n%s styles checked, %s failure(s)\n' "$checked" "$fails"
 [ "$fails" -eq 0 ] || exit 1
