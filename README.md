@@ -274,7 +274,7 @@ installed a single style, that is all — it is already active. If you used
 `--all`, then: `/config` → **Output style** → pick one.
 
 <p align="center">
-  <img src="docs/assets/pick-style.gif" alt="Picking an output style: /config, then Output style, then choose from the list" width="600">
+  <img src="docs/assets/Claude_Code_Config_Styles.gif" alt="Picking an output style: /config, then Output style, then choose from the list">
 </p>
 
 > [!TIP]
