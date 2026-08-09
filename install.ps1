@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  awesome-claude-output-styles installer for Windows (PowerShell 5.1+).
+  Claude Output Style Library installer for Windows (PowerShell 5.1+).
 
 .DESCRIPTION
   The Windows counterpart to install.sh. Same interface, no dependencies:

@@ -1,8 +1,9 @@
 MIT License
 
-Copyright (c) 2026 Serge Shima
+Copyright (c) 2026 Jase Lindgren
 
-Some styles adapt ideas and text from MIT-licensed projects. Their copyright
+Some styles adapt ideas and text from MIT-licensed projects, and earlier
+versions of this collection were published by another author. Their copyright
 notices are preserved in docs/CREDITS.md and in the README credit tables.
 
 (Earlier wording claimed these notices lived "in the credit lines of the
@@ -13,6 +14,7 @@ see docs/format-guide.md. docs/CREDITS.md is the authoritative location.)
 Each line below is reproduced as that project's own LICENSE file states it. Where
 a notice uses a handle, docs/CREDITS.md gives the person's name alongside it.
 
+- Copyright (c) 2026 Serge Shima (smixs/awesome-claude-output-styles)
 - Copyright (c) 2026 Matt Pocock (mattpocock/skills)
 - Copyright (c) 2026 Julius Brussee (JuliusBrussee/caveman)
 - Copyright (c) 2026 Carlos Mello (carlosduplar/caveman-output-style-claude-code)

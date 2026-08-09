@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# awesome-claude-output-styles installer
+# Claude Output Style Library installer
 #
 # Install one style (and make it active):
 #   curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- plain-prose

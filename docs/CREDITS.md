@@ -12,7 +12,7 @@ Reproduced from [LICENSE](../LICENSE), each verbatim as that project's own
 LICENSE file states it. Where the notice uses a handle, the person's name
 follows in parentheses. The bracket names the style that adapts the work.
 
-- Copyright (c) 2026 Serge Shima (`smixs`) — this collection
+- Copyright (c) 2026 Serge Shima (`smixs`, [awesome-claude-output-styles](https://github.com/smixs/awesome-claude-output-styles)) — earlier versions of this collection
 - Copyright (c) 2026 Matt Pocock ([mattpocock/skills](https://github.com/mattpocock/skills)) — [`one-fact-per-sentence`]
 - Copyright (c) 2026 Julius Brussee ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)) — [`short-answers`]
 - Copyright (c) 2026 Carlos Mello (Carlos Duplar Mello, [carlosduplar/caveman-output-style-claude-code](https://github.com/carlosduplar/caveman-output-style-claude-code)) — [`short-answers`]
@@ -118,6 +118,7 @@ to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
 
 ---
 
-The five persona styles upstream carries (`street`, `gen-z`, `sportscaster`,
-`yoda`, `bedtime-story`) are not part of this fork; their credits live in
-[the upstream CREDITS](https://github.com/smixs/awesome-claude-output-styles/blob/main/docs/CREDITS.md).
+*(removed August 2026)* The five persona styles this collection once carried —
+**street**, **gen-z**, **sportscaster**, **yoda**, **bedtime-story** — were cut
+as the wrong default for a library people install at work. No rule of them
+survives elsewhere here, so nothing is claimed on their behalf.
