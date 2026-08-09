@@ -366,59 +366,76 @@ repo, run the suite in it, count the body themselves, and diff against the
 previous version for deletions the author failed to declare — an approval
 without those artifacts does not count.
 
-That process has caught, among others: a rewrite that changed a verify clause
-from "at most one concept per answer" to "exactly one", removing permission
-for a short factual reply; a safety carve-out quietly narrowed from
-"multi-step instructions" to "order-critical multi-step instructions"; and a
-fabricated claim about React `useMemo` that would otherwise have entered the
-system prompt of every session.
+Three things that process caught, none of which a passing test would have:
+a verify clause changed from "at most one concept per answer" to "exactly
+one", which removes permission for a short factual reply and pushes every turn
+toward a mini-lecture; a safety carve-out quietly narrowed from "multi-step
+instructions" to "order-critical multi-step instructions"; and a fabricated
+claim about React `useMemo` that would otherwise have entered the system
+prompt of every session.
 
-Merging two styles works the same way in reverse. Before either merge in this
-library, an adversary was tasked with **refuting** it — writing the answer each
-style would give to the same prompt and showing the two differ. Six merges were
-proposed across four independent analyses. Five were refuted and survive as
-separate files. One survived the attempt and was merged.
+### Four things here are done differently, and here's why
 
-### What the research actually supports
+**1. No ban lists — but not for the reason everyone gives.**
 
-Design decisions here draw on published work where published work exists. Being
-straight about which is which:
+Most style collections ship a list of forbidden words: never say "delve",
+never say "it's worth noting". These styles describe the target voice instead,
+following Anthropic's own guidance under *Control the format of responses* —
+"**Tell Claude what to do instead of what not to do**".
 
-- **Positive framing is first-party guidance.** Anthropic's prompting
-  documentation says, under *Control the format of responses*: "**Tell Claude
-  what to do instead of what not to do**", with a worked example that is
-  itself a style rule. Output styles are formatting and voice instructions, so
-  this is directly on point. It is guidance, not a measurement — the page
-  reports no experiment or effect size.
-- **The reason usually given for that guidance is false at the frontier, and
-  this library used to repeat it.** The claim "ban lists summon the banned
-  words" has been measured once, in *Suppressing Pink Elephants with Direct
-  Principle Feedback* ([arXiv:2402.07896](https://arxiv.org/abs/2402.07896)),
-  Table 1. The prohibition backfired only in the weakest model tested
-  (OpenHermes-7B, 0.33 → 0.36) and helped most in the strongest (GPT-4,
-  0.33 → 0.13 — a 61% relative reduction). The effect reverses with
-  capability. The guidance still stands on its own merits; the folk
-  justification does not, and
-  [docs/format-guide.md](docs/format-guide.md) now says so.
-- **Simplification to the lowest reading levels is where models fail.**
-  *Analysing Zero-Shot Readability-Controlled Sentence Simplification*
-  ([arXiv:2409.20246](https://arxiv.org/abs/2409.20246), accepted at COLING
-  2025) reports that "all tested models struggle to simplify sentences
-  (especially to the lowest levels)". This is why `ladder`'s bottom rung and
-  `thing-explainer`'s word constraint carry countable self-checks rather than
-  trusting the instruction to hold.
-- **Consulted, with no claim resting on them:**
-  [arXiv:2505.00679](https://arxiv.org/abs/2505.00679) on register-analysis
-  prompting and [arXiv:2606.05716](https://arxiv.org/abs/2606.05716) on
-  interpreting style representations. Both are preprints whose commonly-cited
-  findings could not be confirmed from their abstracts, so nothing here is
-  built on them.
+The usual justification for that, which this library used to repeat, is that
+banned words summon the banned words. **That is false for a model as capable
+as Claude.** It has been measured once, in *Suppressing Pink Elephants with
+Direct Principle Feedback* ([arXiv:2402.07896](https://arxiv.org/abs/2402.07896)),
+Table 1 — rate of mentioning a forbidden topic, without → with the ban:
 
-Every citation above was checked against the source, not against a summary of
-it: the Anthropic quote by fetching the page, the Pink Elephants table by
-extracting the rendered paper, the COLING quote from the published abstract.
-Two claims that reached this repo from research notes were dropped at that
-step because they did not survive it.
+| Model | Without | With ban | Effect |
+|---|---|---|---|
+| OpenHermes-7B | 0.33 | 0.36 | backfires |
+| Llama-2-13B-Chat | 0.33 | 0.25 | helps |
+| GPT-4 | 0.33 | 0.13 | helps most, −61% |
+
+The backfire is real only in the weakest model tested, and it *reverses* with
+capability. So prohibitions are not purged from these styles where a
+prohibition states the constraint most exactly — and every safety prohibition
+stays unconditional. What changed is that the ones that remain are written the
+way Anthropic writes theirs: **paired with the alternative in the same breath**,
+and **given their reason**, since "Claude is smart enough to generalize from
+the explanation."
+
+The practical upshot for you: [docs/claudisms-2026.md](docs/claudisms-2026.md)
+is a field guide you can read, not 900 characters of banlist spending your
+session's system-prompt budget.
+
+**2. A style changes how Claude writes, never what Claude does.**
+
+Every style carries an explicit clause — it changes the prose, never which
+tools are used, which edits are made, or when Claude stops to ask — and CI
+fails the build if a style is missing it. You should not have to wonder whether
+installing a terse voice also made Claude terser about warning you before it
+deletes something.
+
+**3. Twelve styles, not nineteen, because merges had to survive an attack.**
+
+Collections grow. This one was pruned: every proposed merge was handed to an
+adversary told to *refute* it by writing the answer each style would give to
+the same prompt and showing they differ. Six merges were proposed; five were
+refuted and survive as separate files; one survived and was merged. The
+practical effect is that when two entries look similar in the picker, they
+aren't — the difference has been demonstrated.
+
+**4. The hardest instruction to follow gets a countable check.**
+
+*Analysing Zero-Shot Readability-Controlled Sentence Simplification*
+([arXiv:2409.20246](https://arxiv.org/abs/2409.20246), COLING 2025) found that
+"all tested models struggle to simplify sentences (especially to the lowest
+levels)" — the exact thing `ladder`'s bottom rung and `thing-explainer` ask
+for. So those two do not trust the instruction to hold; they end with a
+countable self-check on the draft's shape.
+
+Every source above was read at the source, not through a summary of it. Claims
+that reached this repo through research notes and did not survive that check
+were removed rather than softened — including one this README used to make.
 
 Everything else — the Minto Pyramid, ASD-STE100, the Feynman technique, Smart
 Brevity — is **established practice, not measured effect**. Those methods have

@@ -125,6 +125,21 @@ too.
    "no sentence over 20 words" → "every sentence stays under 20 words", not
    "prefer short sentences". Losing the number is a downgrade; losing the
    "never" is not.
+
+   **When a prohibition is the right call, write it the way Anthropic writes
+   theirs.** Two patterns from their own prompting guidance:
+
+   - *Pair it with the alternative in the same breath.* Their recommended
+     front-end snippet does not stop at "NEVER use generic AI-generated
+     aesthetics… cliched color schemes" — it continues "Use unique fonts,
+     cohesive colors and themes, and animations for effects and
+     micro-interactions."
+   - *Give it its reason.* Their own less-effective → more-effective pair is
+     "NEVER use ellipses" improved to "Your response will be read aloud by a
+     text-to-speech engine, so never use ellipses since the text-to-speech
+     engine will not know how to pronounce them" — because, in their words,
+     "Claude is smart enough to generalize from the explanation." The
+     prohibition survives; the reason is what makes it work.
 5b. **Guardrails first, and give the rules their own `## Rules` heading.**
    Instruction adherence shows a measured primacy bias — earlier instructions
    are followed better — and the guardrails are the rules whose silent omission
