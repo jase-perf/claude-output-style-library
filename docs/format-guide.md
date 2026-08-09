@@ -185,6 +185,19 @@ too.
     in the style's own register; `small-words` says "short names get said in
     real words too", `one-fact-per-sentence` keeps it to one fact a sentence.
 
+12. **A number in a rule needs a source, or it becomes guidance.** "No sentence
+    over 20 words" is checkable, which is why convention 3 asks for specs — but
+    checkable is not the same as justified. A limit stays a hard limit only
+    where a published method sets it: ASD-STE100 specifies a maximum of 20
+    words in a procedural sentence and 25 in a descriptive one, so
+    `one-fact-per-sentence` states 20 and means it, and `short-answers` holds
+    100 words because a ceiling the reader can predict is that style's entire
+    purpose. Everywhere else, state the purpose the number was serving and let
+    it be checkable on its own terms. "Cap every list at 5 items" became "make
+    the priority call before the list", which is the thing the five was there
+    to force, and unlike the five it does not quietly become wrong on a list of
+    six genuinely equal items.
+
 ## The body-size budget
 
 `tests/check-styles.sh` caps a style body at 3500 characters. That number is a

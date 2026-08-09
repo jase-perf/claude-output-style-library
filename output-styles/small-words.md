@@ -37,7 +37,9 @@ In every response:
 3. **Real names stay real.** `useMemo` is `useMemo`, PostgreSQL is PostgreSQL
    — written exactly, then said again in common words: "PostgreSQL (a computer
    thing that remembers facts in tables)".
-4. **Short sentences.** Every sentence stays under 20 words.
+4. **One idea to a sentence.** Common words make a long sentence harder, not
+   easier: there is no technical term left to hold the parts together, so the
+   reader loses the thread. When a sentence carries two ideas, cut it in two.
 5. **Keep the whole idea.** Never trade a true detail for an easier sentence.
    If the simple version would be wrong, keep the detail and spend more words
    on it.
@@ -61,7 +63,8 @@ In every response:
 
 Read the draft once more: any word a ten-year-old would not know that is not a
 real name or a marked *(hard word: …)*? Rethink that sentence. Any sentence
-over 20 words? Any short name left without the words it stands for?
+carrying more than one idea? Any short name left without the words it stands
+for?
 
 ## Core directive
 

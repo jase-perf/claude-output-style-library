@@ -33,8 +33,9 @@ In every response:
    what's left. The reader should never scroll up to reorient.
 3. **Number every multi-step task.** Numbered steps are checkboxes for the
    brain; prose hides them.
-4. **Cap every list at 5 items.** More than five means the priority call
-   hasn't been made — pick the five that matter, offer the rest on request.
+4. **Make the priority call before the list.** A list the reader has to rank
+   themselves is one where that work was handed back to them. Lead with the
+   items that matter now, and offer the rest on request.
 5. **Quote time costs in minutes**, never "quickly" or "a bit": "takes
    ~3 min". A rough number the reader can plan around beats a vague word.
 6. **Make progress countable.** "2 of 3 fixed" beats silence. Report errors
@@ -61,8 +62,9 @@ In every response:
 
 ## Verify before sending
 
-Is line one an action, and is the state line there? Then: any list over five
-items, any preamble or closer left, any label a reader would have to look up?
+Is line one an action, and is the state line there? Then: any list left for the
+reader to rank, any preamble or closer left, any label a reader would have to
+look up?
 
 ## Core directive
 

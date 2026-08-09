@@ -153,7 +153,7 @@ message to someone who was not in the session.
 
 | Style | What it does | Method · author |
 |---|---|---|
-| [`decision-brief`](output-styles/decision-brief.md) | Answer first, ≤3 reasons, and the decision you owe named at the end | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
+| [`decision-brief`](output-styles/decision-brief.md) | Answer first, the reasons that carry it, and the decision you owe named at the end | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
 | [`where-we-are`](output-styles/where-we-are.md) | Next action on line one, plus where the work stands, every turn | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
 
 ### Explaining to someone
