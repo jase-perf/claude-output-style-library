@@ -23,78 +23,152 @@ wrote it down.
 
 ## See the difference
 
-Claude Code's default register:
+One question, asked once per style, through Claude Code itself with that style
+active. These are real answers, not illustrations — the
+[full unedited transcripts](docs/examples.md) record the command, the version,
+and the two places a style needed a second run.
 
-> The reason your React component is re-rendering is likely because you're
-> creating a new object reference on each render cycle, which breaks React's
-> referential equality check, so you may want to consider memoization…
-
-The same question answered under four of the eight styles' rules:
+> **Should I use a UUID or an auto-increment integer for a primary key?**
 
 <table>
-<tr><th width="22%" align="left">Voice</th><th align="left">Same question</th></tr>
+<tr><th width="26%" align="left">Style</th><th align="left">What came back</th></tr>
+
 <tr><td valign="top">
 
-**`plain-prose`**
+**[`plain-prose`](output-styles/plain-prose.md)**<br><sub>Ordinary paragraphs. No template, no word budget, and claims you can check.</sub>
 
 </td><td valign="top">
 
-> The child re-renders because its parent did, not because the prop changed —
-> React re-renders children unconditionally. Wrapping the child in
-> `React.memo` makes it skip when props are shallow-equal, but an inline
-> object is a new reference every render, so that comparison always fails.
-> `useMemo` on the object keeps the reference stable and the memo starts
-> doing its job.
-
-</td></tr>
-<tr><td valign="top">
-
-**`short-answers`**
-
-</td><td valign="top">
-
-> You need both: `React.memo` on the child and `useMemo` on the object. React
-> re-renders children whenever the parent renders; `memo` opts out of that,
-> and an inline object defeats `memo` by arriving as a new reference each
-> time.
+> Default to a bigint auto-increment, and reach for a UUID only when you need
+> one of the three things it buys you.
 >
-> Not checked: whether the child is already memoised. If it isn't, `useMemo`
-> alone changes nothing.
+> The integer wins on storage and index behavior. It's 8 bytes against a UUID's
+> 16, and every foreign key and secondary index repeats the primary key, so the
+> size difference multiplies across the schema. More importantly, sequential
+> values append to the right edge of the B-tree, while random UUIDv4s land on
+> random pages…
 
 </td></tr>
+
 <tr><td valign="top">
 
-**`small-words`**
+**[`short-answers`](output-styles/short-answers.md)**<br><sub>A ceiling you can predict before asking, closing on what it did not check.</sub>
 
 </td><td valign="top">
 
-> The part that draws is told to draw again every time the part above it
-> draws. You can ask it to check first and skip the work when nothing it was
-> handed has changed. But you hand it a new box each time, even when the
-> things inside are the same, so the check always says "this is new". Hand it
-> the same box and the check starts helping.
-
-</td></tr>
-<tr><td valign="top">
-
-**`your-turn`**
-
-</td><td valign="top">
-
-> Here is the part that trips almost everyone: React does not compare props to
-> decide whether to re-render a child. It re-renders children whenever the
-> parent renders, full stop. Comparison only happens if you opt in to it.
+> Default to a `BIGINT` auto-increment: it's half the size of a UUID, keeps
+> B-tree inserts append-only, and makes debugging easier. Choose a UUID when
+> clients must generate IDs offline, when rows merge across databases or shards,
+> or when the ID appears in URLs and you don't want to leak row counts…
 >
-> So you added `useMemo` to the object and nothing changed. Given that, what
-> do you think is still missing?
+> Not checked: your database and whether IDs are ever exposed externally — that
+> decides the tradeoff.
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`decision-brief`](output-styles/decision-brief.md)**<br><sub>The answer first, the reasons that carry it underneath, the decision named.</sub>
+
+</td><td valign="top">
+
+> **Default to a `bigint` auto-increment key, and switch to UUIDv7 only when a
+> specific need forces it** — distributed ID generation, publicly exposed IDs,
+> or merging data across databases.
+>
+> 1. **Write and index performance favors integers.** Random UUIDs (v4) scatter
+>    inserts across the B-tree, fragmenting the primary index and blowing out
+>    cache…
+> 2. **Size compounds everywhere.** A UUID is 16 bytes versus 8 for a bigint,
+>    and the primary key is duplicated into every secondary index…
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`where-we-are`](output-styles/where-we-are.md)**<br><sub>The next action on line one, for work that runs long.<br><em>Asked a different question — see below.</em></sub>
+
+</td><td valign="top">
+
+> Pause the backfill — or throttle it hard — before anything else. It's
+> reversible, takes effect immediately, and it's also your diagnostic: what
+> happens to insert latency in the next few minutes tells you which of the two
+> likely causes you have.
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md)**<br><sub>One fact a sentence, under 20 words, understood on the first read.</sub>
+
+</td><td valign="top">
+
+> A UUID is a 128-bit identifier, usually random. An auto-increment integer is a
+> number that the database creates in sequence.
+>
+> - The database creates each key. Your code does nothing.
+> - An integer key uses 8 bytes (as `bigint`). A UUID key uses 16 bytes.
+> - New integer keys are sequential. Sequential keys keep index writes fast and
+>   compact.
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`small-words`](output-styles/small-words.md)**<br><sub>Everyday words only, so each part is named by what it does.</sub>
+
+</td><td valign="top">
+
+> …use a number that grows by one each time. […] Each new row lands at the end
+> of the fast look-up list the store keeps *(hard word: index — a sorted list
+> that helps find rows fast)*. Landing at the end is the fast case, so writes
+> stay quick and the list stays lean.
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`one-analogy`](output-styles/one-analogy.md)**<br><sub>One comparison, sustained, plus the point where it stops being true.</sub>
+
+</td><td valign="top">
+
+> Think of the table's primary-key index as a library's shelves, and each row as
+> a book being shelved. **Auto-increment integer** is shelving by arrival
+> number: every new book goes at the end of the last shelf…
+>
+> Where the analogy breaks: in a library, a badly placed book is merely slow to
+> find later. In a database, random inserts hurt *at write time*.
+
+</td></tr>
+
+<tr><td valign="top">
+
+**[`your-turn`](output-styles/your-turn.md)**<br><sub>Teaches one idea, names the part people trip on, then stops and waits.</sub>
+
+</td><td valign="top">
+
+> The counterintuitive bit: UUIDs' insert cost has almost nothing to do with
+> them being bigger than integers — it's that *randomness* destroys the "always
+> insert at the right edge" pattern the B-tree is fast at.
+>
+> Quick check: […] which key would you pick, and what's the one future change
+> that should make you reconsider? Say "just tell me" and I'll answer it
+> outright.
 
 </td></tr>
 </table>
 
-Same model, same underlying explanation, same facts about how React re-renders.
-`your-turn` deliberately stops before the answer; the rest differ only in
-register. Each style's method and author are credited in
-[The styles](#the-styles) below and in [docs/CREDITS.md](docs/CREDITS.md).
+Same model, same facts, same recommendation — bigint by default, UUIDv7 when the
+ID has to be minted elsewhere or shown to strangers. Only the register moved,
+and `your-turn` deliberately stops before handing you the conclusion.
+
+Two things that table is honest about. `where-we-are` was asked about a
+migration already in flight, because its rules describe a session already
+underway and a one-shot question gives it no state to restate. And
+`one-analogy` and `one-fact-per-sentence` each reverted to the default register
+on their first run and held on the second — style adherence is strong, not
+deterministic, which is also the case for the optional
+[`--enforce`](#make-it-stick---enforce) hook.
 
 ## Why this works when a CLAUDE.md rule doesn't
 
@@ -139,34 +213,37 @@ CI fails the build if any style stops carrying that guardrails block.
 without imposing a format, which makes it the one style that is safe to leave on
 permanently.
 
+What each one does is shown above, in its own words. Grouped here by the job
+you'd reach for it on, with the method behind it:
+
 ### Everyday answers
 
-| Style | What it does | Method · author |
-|---|---|---|
-| [`plain-prose`](output-styles/plain-prose.md) | Ordinary paragraphs, no template, no word limit. Claims are facts you can check | [Siqi Chen](https://github.com/blader/humanizer) · [Peter Yang](https://github.com/petergyang/no-ai-slop) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) · [Hardik Pandya](https://github.com/hardikpandya/stop-slop) · Joe Cotellese |
-| [`short-answers`](output-styles/short-answers.md) | The same answer under a real word budget, closing on what it did not check | [Julius Brussee](https://github.com/JuliusBrussee/caveman) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
+| Style | Method · author |
+|---|---|
+| [`plain-prose`](output-styles/plain-prose.md) | [Siqi Chen](https://github.com/blader/humanizer) · [Peter Yang](https://github.com/petergyang/no-ai-slop) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) · [Hardik Pandya](https://github.com/hardikpandya/stop-slop) · Joe Cotellese |
+| [`short-answers`](output-styles/short-answers.md) | [Julius Brussee](https://github.com/JuliusBrussee/caveman) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
 
 ### Work documents
 
 For output that leaves your terminal — a PR description, a status update, a
 message to someone who was not in the session.
 
-| Style | What it does | Method · author |
-|---|---|---|
-| [`decision-brief`](output-styles/decision-brief.md) | Answer first, the reasons that carry it, and the decision you owe named at the end | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
-| [`where-we-are`](output-styles/where-we-are.md) | Next action on line one, plus where the work stands, every turn | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
+| Style | Method · author |
+|---|---|
+| [`decision-brief`](output-styles/decision-brief.md) | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
+| [`where-we-are`](output-styles/where-we-are.md) | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
 
 ### Explaining to someone
 
 For unfamiliar code, onboarding, and any answer you need to understand rather
 than skim.
 
-| Style | What it does | Method · author |
-|---|---|---|
-| [`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md) | ≤20-word sentences, one word one meaning, and it never drops that register | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · [Matt Pocock](https://github.com/mattpocock/skills) |
-| [`small-words`](output-styles/small-words.md) | Everyday words only, so each part is named by what it does | [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*) |
-| [`one-analogy`](output-styles/one-analogy.md) | One comparison carries the answer, every part mapped, and where it stops being true | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist |
-| [`your-turn`](output-styles/your-turn.md) | Ends on a question and waits, instead of handing you the answer | Richard Feynman's technique |
+| Style | Method · author |
+|---|---|
+| [`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md) | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · [Matt Pocock](https://github.com/mattpocock/skills) |
+| [`small-words`](output-styles/small-words.md) | [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*) |
+| [`one-analogy`](output-styles/one-analogy.md) | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist |
+| [`your-turn`](output-styles/your-turn.md) | Richard Feynman's technique |
 
 Full attribution for every adapted method: [docs/CREDITS.md](docs/CREDITS.md).
 
@@ -407,4 +484,4 @@ open an issue; you outrank us.
 
 ---
 
-<sub><strong>Docs:</strong> <a href="docs/format-guide.md">Format guide</a> · <a href="docs/design-decisions.md">Design decisions</a> · <a href="docs/claudisms-2026.md">Claudisms field guide</a> · <a href="docs/enforce-hook.md">Enforce hook</a> · <a href="skills/style-maker/SKILL.md">style-maker</a> · <a href="https://github.com/jase-perf/claude-output-style-library/issues">Issues</a></sub>
+<sub><strong>Docs:</strong> <a href="docs/examples.md">Full examples</a> · <a href="docs/format-guide.md">Format guide</a> · <a href="docs/design-decisions.md">Design decisions</a> · <a href="docs/claudisms-2026.md">Claudisms field guide</a> · <a href="docs/enforce-hook.md">Enforce hook</a> · <a href="skills/style-maker/SKILL.md">style-maker</a> · <a href="https://github.com/jase-perf/claude-output-style-library/issues">Issues</a></sub>
