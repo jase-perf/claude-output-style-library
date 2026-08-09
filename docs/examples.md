@@ -5,8 +5,8 @@ answers, unedited.
 
 ## How these were generated
 
-One question, asked once per style, through Claude Code itself with that style
-active:
+One question, asked once per style plus once with no style at all, through
+Claude Code itself:
 
 ```bash
 claude -p "Should I use a UUID or an auto-increment integer for a primary key?" \
@@ -34,6 +34,38 @@ claude -p "Should I use a UUID or an auto-increment integer for a primary key?" 
 ## The question
 
 > Should I use a UUID or an auto-increment integer for a primary key?
+
+---
+
+## no style (Claude Code's default)
+
+The baseline, run identically with `--settings '{"outputStyle":"default"}'`.
+
+> For most applications, use an auto-increment integer (a `bigint` identity column) as the primary key, and only reach for UUIDs when you have a specific reason. Here's the reasoning.
+>
+> Auto-increment integers are smaller (8 bytes vs 16), faster to join and index, and inserts append to the end of the index rather than scattering across it. That last point matters more than people expect: random UUIDv4 values cause index fragmentation and poor cache locality, which degrades write throughput as tables grow — especially on MySQL/InnoDB, where the primary key is the clustered index and every secondary index carries a copy of it.
+>
+> UUIDs earn their cost in a few situations:
+>
+> - **Keys must be generated before hitting the database** — offline clients, distributed services, or batch imports where you can't wait for the database to assign an ID.
+> - **Merging data across databases or shards**, where sequential IDs from different sources would collide.
+> - **You expose IDs publicly and don't want them enumerable.** Sequential IDs leak information (`/orders/10432` tells competitors your volume, and invites people to try `/orders/10433`).
+>
+> If you do go with UUIDs, use **UUIDv7**, not v4. It's time-ordered, so it keeps the append-mostly insert pattern that makes integer keys fast, while still being globally unique and non-colliding. Postgres 18 generates them natively (`uuidv7()`); on earlier versions or other databases, generate them in the application. Store them in a native `uuid` type, never as a 36-character string.
+>
+> A common middle path if your only concern is enumerable public IDs: keep the bigint primary key internally, and add a separate unique column (UUID, or a short random slug) for external URLs and APIs. You get fast joins internally and opaque identifiers publicly, at the cost of one extra index.
+>
+> So: bigint by default, UUIDv7 when clients generate keys or data merges across systems, and the two-column approach when you just don't want IDs guessable.
+
+314 words. Worth being honest about: this is a good answer. It leads with the
+recommendation, it does not hedge, and it does not restate the question. The
+default register is not broken, and a library that claimed otherwise would be
+making exactly the kind of unfalsifiable complaint `plain-prose` exists to stop.
+
+What it does do is reach for one shape — bold lead-in, bulleted middle, bold
+recap — and spend 314 words on it. Every style below reaches the same
+conclusion. They differ in the shape they arrive in, and in whether you picked
+that shape.
 
 ---
 
@@ -183,6 +215,8 @@ gives it no state to restate. So it was asked something with work in flight:
 
 > We are partway through switching the orders table to UUIDv7 primary keys. The
 > backfill is about 60% done and insert latency has roughly doubled. What now?
+
+It answered:
 
 > Pause the backfill — or throttle it hard — before anything else. It's reversible, takes effect immediately, and it's also your diagnostic: what happens to insert latency in the next few minutes tells you which of the two likely causes you have.
 >

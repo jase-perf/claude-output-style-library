@@ -3,9 +3,9 @@
 [![CI](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml/badge.svg)](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/jase-perf/claude-output-style-library?style=flat)](LICENSE)
 
-**Claude Code restates your question, hedges the answer, and buries the fact you
-needed. These eight files replace that voice — and nothing else about how Claude
-works.**
+**Claude Code has one register, and it reaches for the same shape whatever you
+ask: bold lead, bulleted middle, bold recap. These eight files let you pick a
+different one — and change nothing else about how Claude works.**
 
 An output style is a Claude Code feature: a markdown file that replaces part of
 the system prompt, so a voice instruction lands in the same slot as Claude's own
@@ -32,6 +32,28 @@ and the two places a style needed a second run.
 
 <table>
 <tr><th width="26%" align="left">Style</th><th align="left">What came back</th></tr>
+
+<tr><td valign="top">
+
+**no style**<br><sub>Claude Code's default, for comparison. 314 words.</sub>
+
+</td><td valign="top">
+
+> For most applications, use an auto-increment integer (a `bigint` identity
+> column) as the primary key, and only reach for UUIDs when you have a specific
+> reason. Here's the reasoning.
+>
+> Auto-increment integers are smaller (8 bytes vs 16), faster to join and index,
+> and inserts append to the end of the index rather than scattering across it…
+>
+> UUIDs earn their cost in a few situations:
+>
+> - **Keys must be generated before hitting the database** — offline clients,
+>   distributed services, or batch imports…
+> - **Merging data across databases or shards**, where sequential IDs from
+>   different sources would collide.
+
+</td></tr>
 
 <tr><td valign="top">
 
@@ -158,9 +180,13 @@ and the two places a style needed a second run.
 </td></tr>
 </table>
 
-Same model, same facts, same recommendation — bigint by default, UUIDv7 when the
-ID has to be minted elsewhere or shown to strangers. Only the register moved,
-and `your-turn` deliberately stops before handing you the conclusion.
+All nine reached the same recommendation — bigint by default, UUIDv7 when the ID
+has to be minted elsewhere or shown to strangers. **That is the point.** A style
+does not make Claude smarter or more correct; the default answer above is a
+perfectly good answer. What changes is the shape it arrives in, and whether that
+shape is one you chose: 102 words with the gap named, or paragraphs with no
+bullets at all, or an analogy that tells you where it stops being true.
+`your-turn` alone withholds the conclusion, on purpose.
 
 Two things that table is honest about. `where-we-are` was asked about a
 migration already in flight, because its rules describe a session already
