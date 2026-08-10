@@ -3,9 +3,13 @@
 [![CI](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml/badge.svg)](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/jase-perf/claude-output-style-library?style=flat)](LICENSE)
 
-**Claude Code has one register, and it reaches for the same shape whatever you
+**Make Claude Code speak in a style that is easier to understand and better
+suited to your project.**
+
+Claude's default way of speaking gets crowded with jargon, abbreviations, and
+shorthand you have to decode — and it reaches for the same shape whatever you
 ask: bold lead, bulleted middle, bold recap. These eight files let you pick a
-different one — and change nothing else about how Claude works.**
+different voice, and change nothing else about how Claude works.
 
 An output style is a Claude Code feature: a markdown file that replaces part of
 the system prompt, so a voice instruction lands in the same slot as Claude's own
@@ -526,7 +530,8 @@ open an issue; you outrank us.
 
 ## License
 
-[MIT](LICENSE). Adapted styles preserve their sources' copyright notices; see
+[MIT](LICENSE). Adapted styles preserve their sources' copyright notices in
+[NOTICE](NOTICE); who each person is and which style adapts their work is in
 [docs/CREDITS.md](docs/CREDITS.md).
 
 ---
