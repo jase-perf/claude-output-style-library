@@ -1,0 +1,33 @@
+Claude Output Style Library
+Copyright (c) 2026 Jase Lindgren
+
+This product includes work adapted from the MIT-licensed projects listed below,
+and from earlier versions of this collection published by another author.
+
+Each work below was made available under the MIT License. Its copyright notice
+is reproduced here verbatim, as that project's own LICENSE file states it, and
+the MIT permission notice reproduced in the LICENSE file of this repository
+applies to those works as it does to this one. Where a notice uses a handle
+rather than a name, docs/CREDITS.md gives the person's name alongside it, and
+names which style adapts the work.
+
+  Copyright (c) 2026 Serge Shima (smixs/awesome-claude-output-styles)
+  Copyright (c) 2026 Matt Pocock (mattpocock/skills)
+  Copyright (c) 2026 Julius Brussee (JuliusBrussee/caveman)
+  Copyright (c) 2026 Carlos Mello (carlosduplar/caveman-output-style-claude-code)
+  Copyright (c) 2026 Ayoub Ghriss (ayghri/i-have-adhd)
+  Copyright (c) 2026 AminBlg (AminBlg/SimpleEnglish)
+  Copyright (c) 2026 Peter Yang (petergyang/no-ai-slop)
+  Copyright (c) 2025 Siqi Chen (blader/humanizer)
+  Copyright (c) 2026 Conor Bronsdon (conorbronsdon/avoid-ai-writing)
+  Copyright (c) 2025 Hardik Pandya (hardikpandya/stop-slop)
+  Copyright (c) 2025 Sruthi Reddy (sruthir28/enterprise-ai-skills)
+
+These notices lived in the LICENSE file until August 2026. They were moved here
+because the additions made LICENSE unrecognisable to GitHub's license detection,
+which reported the repository as "Other / NOASSERTION" rather than MIT. LICENSE
+is now the unmodified MIT text; this file carries the notices MIT requires be
+preserved. Nothing was dropped in the move.
+
+Full attribution, including the methods and standards that carry no copyright
+notice, is in docs/CREDITS.md.

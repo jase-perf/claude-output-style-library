@@ -2,13 +2,16 @@
 
 Full attribution for every adapted style. These lines used to live inside the
 style files; they moved here so the prompts stay pure instructions (see
-[format-guide.md](format-guide.md)). **This file is the authoritative location
-for the copyright notices MIT requires be preserved** — the style bodies no
-longer carry credit lines, so there is nowhere else for them to live.
+[format-guide.md](format-guide.md)).
+
+The copyright notices MIT requires be preserved live in [NOTICE](../NOTICE);
+[LICENSE](../LICENSE) is the unmodified MIT text. This file is the readable
+companion to both: it says who each person is, which style adapts their work,
+and what survived each merge.
 
 ## Copyright notices preserved under MIT
 
-Reproduced from [LICENSE](../LICENSE), each verbatim as that project's own
+Reproduced from [NOTICE](../NOTICE), each verbatim as that project's own
 LICENSE file states it. Where the notice uses a handle, the person's name
 follows in parentheses. The bracket names the style that adapts the work.
 
