@@ -28,10 +28,11 @@ claude -p "Should I use a UUID or an auto-increment integer for a primary key?" 
    20-word sentences in the other. The second run of each is what appears below.
    Style adherence is not deterministic, and pretending otherwise would be the
    kind of claim this library exists to stop.
-2. `where-we-are` answers a **different question**, and holds its format on
-   roughly a third of runs even after being rewritten to demand a literal
-   marker. Its section carries the full numbers, the reason a one-shot test is
-   unfair to it, and how it relates to Claude Code's built-in `/recap`.
+2. `where-we-are` holds its format on roughly a third of runs, even after being
+   rewritten to demand a literal marker. Its section answers the same question
+   as everyone else, then shows the same style on a question with work actually
+   in flight, and carries the full adherence numbers plus how it relates to
+   Claude Code's built-in `/recap`.
 
 ## The question
 
@@ -210,11 +211,31 @@ stops on a question with the exit printed next to it.
 This style answers a different question and needs the most explanation, so it
 gets a section rather than a caption.
 
-### Why a different question
+### The same question as everyone else
 
-Asked the UUID question, it produced ordinary prose. Its rules describe a
-session already underway, and a one-shot question gives it no state to restate.
-So it was asked something with work in flight:
+> Default to a 64-bit auto-increment integer (`BIGINT`/`bigserial`/identity column) unless something specific pushes you to UUIDs — it's smaller (8 bytes vs 16), faster to join and index, and inserts append to the end of the B-tree instead of splattering across it.
+>
+> Where we are: no code touched — this is a design recommendation, based on your question alone.
+>
+> Reach for a UUID when one of these is actually true:
+>
+> 1. IDs must be generated outside the database — client-side, offline-first apps, or multiple writers/services minting IDs without coordinating.
+> 2. You'll merge data across databases or shards, where sequences would collide.
+> 3. IDs are exposed publicly and must not be guessable or enumerable (`/orders/10412` leaks volume and invites `/orders/10413`).
+>
+> If you do use UUIDs, use **UUIDv7**, not v4. v4 is random, so every insert lands at a random spot in the primary index — on MySQL/InnoDB (which clusters rows by PK) that means page splits, cache misses, and a bloated index; Postgres suffers less but still pays in index size and WAL. v7 is time-ordered, so inserts stay roughly sequential and you keep most of the integer key's insert performance.
+>
+> The hybrid worth knowing: `BIGINT` primary key internally (cheap joins, all foreign keys reference it) plus a UUID column with a unique index as the public identifier in URLs and APIs. That's the usual answer when the only reason for UUIDs is "don't expose sequential IDs" — you get the security property without making every join and index pay 16 bytes.
+>
+> So: single database, IDs not publicly exposed or enumerability doesn't matter → integer. Distributed generation or merge-ability → UUIDv7. Just hiding IDs from users → integer PK + UUID external ID.
+
+281 words, the same recommendation as the other eight, and the state line
+handles the awkward case honestly: nothing has happened yet, so it says so.
+
+### The same style with work actually in flight
+
+The state line has more to do when there is state. Asked instead about a
+migration already running:
 
 > We are partway through switching the orders table to UUIDv7 primary keys. The
 > backfill is about 60% done and insert latency has roughly doubled. What now?
