@@ -7,9 +7,9 @@
 suited to your project.**
 
 Claude's default way of speaking gets crowded with jargon, abbreviations, and
-shorthand you have to decode — and it reaches for the same shape whatever you
-ask: bold lead, bulleted middle, bold recap. These eight files let you pick a
-different voice, and change nothing else about how Claude works.
+shorthand you have to decode, and it reaches for the same shape whatever you
+ask. These eight files let you pick a different voice, and change nothing else
+about how Claude works.
 
 An output style is a Claude Code feature: a markdown file that replaces part of
 the system prompt, so a voice instruction lands in the same slot as Claude's own
@@ -27,184 +27,157 @@ wrote it down.
 
 ## See the difference
 
-One question, asked once per style, through Claude Code itself with that style
-active. These are real answers, not illustrations — the
-[full unedited transcripts](docs/examples.md) record the command, the version,
-and the two places a style needed a second run.
+One question, put to Claude Code once with each style active, and once with
+none. These are real answers, not illustrations — the [full unedited
+transcripts](docs/examples.md) record the command, the version, and the two
+places a style needed a second run.
 
 > **Should I use a UUID or an auto-increment integer for a primary key?**
 
 <table>
-<tr><th width="26%" align="left">Style</th><th align="left">What came back</th></tr>
+<tr><th width="27%" align="left">Style</th><th align="left">What came back</th></tr>
 
 <tr><td valign="top">
 
-**no style**<br><sub>Claude Code's default, for comparison. 314 words.</sub>
+**no style**
+
+Claude Code with nothing installed, for comparison. A good answer — dense, and written for a reader who already knows the words. Full answer: 314 words.
 
 </td><td valign="top">
 
-> For most applications, use an auto-increment integer (a `bigint` identity
-> column) as the primary key, and only reach for UUIDs when you have a specific
-> reason. Here's the reasoning.
->
-> Auto-increment integers are smaller (8 bytes vs 16), faster to join and index,
-> and inserts append to the end of the index rather than scattering across it…
->
-> UUIDs earn their cost in a few situations:
->
-> - **Keys must be generated before hitting the database** — offline clients,
->   distributed services, or batch imports…
-> - **Merging data across databases or shards**, where sequential IDs from
->   different sources would collide.
+> Auto-increment integers are smaller (8 bytes vs 16), faster to join and index, and inserts append to the end of the index rather than scattering across it. That last point matters more than people expect: random UUIDv4 values cause index fragmentation and poor cache locality, which degrades write throughput as tables grow — especially on MySQL/InnoDB, where the primary key is the clustered index and every secondary index carries a copy of it…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`plain-prose`](output-styles/plain-prose.md)**<br><sub>Ordinary paragraphs. No template, no word budget, and claims you can check.</sub>
+**[`plain-prose`](output-styles/plain-prose.md)**
+
+For everyday questions: paragraphs instead of bullet lists, and no set length. Install this one if you install only one. Full answer: 256 words.
 
 </td><td valign="top">
 
-> Default to a bigint auto-increment, and reach for a UUID only when you need
-> one of the three things it buys you.
->
-> The integer wins on storage and index behavior. It's 8 bytes against a UUID's
-> 16, and every foreign key and secondary index repeats the primary key, so the
-> size difference multiplies across the schema. More importantly, sequential
-> values append to the right edge of the B-tree, while random UUIDv4s land on
-> random pages…
+> A UUID earns its cost in three situations: rows are created on clients or across multiple writers before the database is reachable, so you can't wait for the sequence; you merge or shard data across databases, where sequences collide; or the ID appears in URLs and a sequential value would let people enumerate your records or read your growth rate off the numbers…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`short-answers`](output-styles/short-answers.md)**<br><sub>A ceiling you can predict before asking, closing on what it did not check.</sub>
+**[`short-answers`](output-styles/short-answers.md)**
+
+For quick questions when you do not want an essay: it aims for 100 words, then names what it did not check. What you see beside this is the entire answer — 102 words.
 
 </td><td valign="top">
 
-> Default to a `BIGINT` auto-increment: it's half the size of a UUID, keeps
-> B-tree inserts append-only, and makes debugging easier. Choose a UUID when
-> clients must generate IDs offline, when rows merge across databases or shards,
-> or when the ID appears in URLs and you don't want to leak row counts…
+> Default to a `BIGINT` auto-increment: it's half the size of a UUID, keeps B-tree inserts append-only, and makes debugging easier. Choose a UUID when clients must generate IDs offline, when rows merge across databases or shards, or when the ID appears in URLs and you don't want to leak row counts or invite enumeration. If you do, prefer UUIDv7 — random v4 keys scatter inserts across the index and hurt cache locality. A common middle path: integer primary key internally, separate UUID column for anything public-facing.
 >
-> Not checked: your database and whether IDs are ever exposed externally — that
-> decides the tradeoff.
+> Not checked: your database and whether IDs are ever exposed externally — that decides the tradeoff.
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`decision-brief`](output-styles/decision-brief.md)**<br><sub>The answer first, the reasons that carry it underneath, the decision named.</sub>
+**[`decision-brief`](output-styles/decision-brief.md)**
+
+For an answer you will paste into a status update or hand to someone who was not there: the verdict first, then numbered reasons under it. Beside this is reason two of three. Full answer: 309 words.
 
 </td><td valign="top">
 
-> **Default to a `bigint` auto-increment key, and switch to UUIDv7 only when a
-> specific need forces it** — distributed ID generation, publicly exposed IDs,
-> or merging data across databases.
->
-> 1. **Write and index performance favors integers.** Random UUIDs (v4) scatter
->    inserts across the B-tree, fragmenting the primary index and blowing out
->    cache…
-> 2. **Size compounds everywhere.** A UUID is 16 bytes versus 8 for a bigint,
->    and the primary key is duplicated into every secondary index…
+> 2. **Size compounds everywhere.** A UUID is 16 bytes versus 8 for a bigint, and the primary key is duplicated into every secondary index and every foreign key that references it. On a large schema that's a real difference in index size and join speed, not a rounding error.
+> 3. **UUIDs win when the ID leaves the database.**…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`where-we-are`](output-styles/where-we-are.md)**<br><sub>The next action on line one, then a literal <code>Where we are:</code> line, for work that runs long or gets handed on.<br><em>Asked a different question — see below.</em></sub>
+**[`where-we-are`](output-styles/where-we-are.md)**
+
+For work that runs over days or gets handed to someone else: it asks for a line in every answer saying where things stand — here, that nothing has been done yet. Full answer: 281 words.
 
 </td><td valign="top">
 
-> Pause or heavily throttle the backfill and watch insert p99 for 10–15 minutes
-> — that single measurement splits the problem in two and costs you almost
-> nothing at 60% done.
+> Where we are: no code touched — this is a design recommendation, based on your question alone.
 >
-> Where we are: backfill ~60% complete, insert latency ~2x baseline, cause not
-> yet isolated; nothing has been changed yet, and nothing here says revert — at
-> 60% done, pushing through is almost always cheaper than backing out unless
-> you're breaching SLO right now.
+> Reach for a UUID when one of these is actually true:
+>
+> 1. IDs must be generated outside the database — client-side, offline-first apps, or multiple writers/services minting IDs without coordinating…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md)**<br><sub>One fact a sentence, under 20 words, understood on the first read.</sub>
+**[`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md)**
+
+For a reader new to the subject, or reading in a second language: one fact per sentence, and no sentence over 20 words. Full answer: 309 words.
 
 </td><td valign="top">
 
-> A UUID is a 128-bit identifier, usually random. An auto-increment integer is a
-> number that the database creates in sequence.
+> The short answer: use an auto-increment integer by default. Use a UUID only when a real need exists.
+>
+> A UUID is a 128-bit identifier, usually random. An auto-increment integer is a number that the database creates in sequence.
+>
+> **Why the integer wins for most apps:**
 >
 > - The database creates each key. Your code does nothing.
-> - An integer key uses 8 bytes (as `bigint`). A UUID key uses 16 bytes.
-> - New integer keys are sequential. Sequential keys keep index writes fast and
->   compact.
+> - An integer key uses 8 bytes (as `bigint`). A UUID key uses 16 bytes…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`small-words`](output-styles/small-words.md)**<br><sub>Everyday words only, so each part is named by what it does.</sub>
+**[`small-words`](output-styles/small-words.md)**
+
+For explaining something to someone outside your field: everyday words instead of jargon, with the real term given right beside the plain one. Runs longer than Claude's normal answer, not shorter. Full answer: 435 words.
 
 </td><td valign="top">
 
-> …use a number that grows by one each time. […] Each new row lands at the end
-> of the fast look-up list the store keeps *(hard word: index — a sorted list
-> that helps find rows fast)*. Landing at the end is the fast case, so writes
-> stay quick and the list stays lean.
+> Short answer: if one fact-store *(the database — the computer thing that holds your rows)* makes every row, use a number that grows by one each time (auto-increment, as a `bigint`). If rows get made in many places, or the ID is shown to the outside world, use a UUID — and pick UUIDv7, not UUIDv4…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`one-analogy`](output-styles/one-analogy.md)**<br><sub>One comparison, sustained, plus the point where it stops being true.</sub>
+**[`one-analogy`](output-styles/one-analogy.md)**
+
+For getting your head around something unfamiliar: one comparison carried through the whole answer, with the real terms alongside it — and, later in the answer, the point where the comparison stops being true. Full answer: 406 words.
 
 </td><td valign="top">
 
-> Think of the table's primary-key index as a library's shelves, and each row as
-> a book being shelved. **Auto-increment integer** is shelving by arrival
-> number: every new book goes at the end of the last shelf…
+> Think of the table's primary-key index as a library's shelves, and each row as a book being shelved.
 >
-> Where the analogy breaks: in a library, a badly placed book is merely slow to
-> find later. In a database, random inserts hurt *at write time*.
+> - **Auto-increment integer** is shelving by arrival number: every new book goes at the end of the last shelf. Inserts are fast and the shelves stay tightly packed (good B-tree locality, small 8-byte keys, and every index card that cites the book — foreign keys, secondary indexes — stays short)…
 
 </td></tr>
 
 <tr><td valign="top">
 
-**[`your-turn`](output-styles/your-turn.md)**<br><sub>Teaches one idea, names the part people trip on, then stops and waits.</sub>
+**[`your-turn`](output-styles/your-turn.md)**
+
+For learning something rather than just getting past it: the answer in full, then a separate question handed back for you to try. Beside this is its closing paragraph. Full answer: 351 words.
 
 </td><td valign="top">
 
-> The counterintuitive bit: UUIDs' insert cost has almost nothing to do with
-> them being bigger than integers — it's that *randomness* destroys the "always
-> insert at the right edge" pattern the B-tree is fast at.
->
-> Quick check: […] which key would you pick, and what's the one future change
-> that should make you reconsider? Say "just tell me" and I'll answer it
-> outright.
+> Quick check: your app runs on a single Postgres server, and order IDs never appear in URLs — which key would you pick, and what's the one future change that should make you reconsider? Say "just tell me" and I'll answer it outright.
 
 </td></tr>
+
 </table>
 
-All nine reached the same recommendation — bigint by default, UUIDv7 when the ID
-has to be minted elsewhere or shown to strangers. **That is the point.** A style
-does not make Claude smarter or more correct; the default answer above is a
-perfectly good answer. What changes is the shape it arrives in, and whether that
-shape is one you chose: 102 words with the gap named, or paragraphs with no
-bullets at all, or an analogy that tells you where it stops being true.
-`your-turn` alone withholds the conclusion, on purpose.
+All nine reached the same recommendation — an integer key by default, UUIDv7
+when the ID has to be created outside the database or shown to strangers. Most
+cells above are excerpts, and a trailing … means the answer keeps going; the
+[full transcripts](docs/examples.md) let you check that. **That is the
+point.** A style does not make Claude smarter, more correct, or even shorter —
+three of the eight came back longer than the no-style answer. What changes is
+the shape the answer arrives in, and whether that shape is one you chose.
 
-Two things that table is honest about. `where-we-are` was asked about a
-migration already in flight, because its rules describe a session already
-underway and a one-shot question gives it no state to restate — and it is the
-least reliable of the eight, producing its state line on roughly a third of
-runs. And `one-analogy` and `one-fact-per-sentence` each reverted to the
-default register on their first run and held on the second. Adherence is
-strong, not deterministic, which is what the optional
-[`--enforce`](#make-it-stick---enforce) hook exists for. The measurements are
-in [docs/examples.md](docs/examples.md).
+Two things that table is honest about. `where-we-are` is the least reliable of
+the eight, producing its state line on roughly a third of runs, which is why
+its description says it *asks for* one. And `one-analogy` and
+`one-fact-per-sentence` each reverted to the default register on their first
+run and held on the second. Adherence is strong, not deterministic, which is
+what the optional [`--enforce`](#make-it-stick---enforce) hook exists for. The
+measurements are in [docs/examples.md](docs/examples.md).
 
 ## Why this works when a CLAUDE.md rule doesn't
 
