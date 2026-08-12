@@ -3,25 +3,25 @@
 [![CI](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml/badge.svg)](https://github.com/jase-perf/claude-output-style-library/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/jase-perf/claude-output-style-library?style=flat)](LICENSE)
 
-**Make Claude Code speak in a style that is easier to understand and better
-suited to your project.**
+**Eight ways to change how Claude Code writes to you. One command each.**
 
-Claude's default way of speaking gets crowded with jargon, abbreviations, and
-shorthand you have to decode, and it reaches for the same shape whatever you
-ask. These eight files let you pick a different voice, and change nothing else
-about how Claude works.
+Claude's answers arrive packed with jargon and abbreviations you have to decode,
+and they come out the same shape whatever you ask. Install one of these files
+and Claude does the same work, in a voice you picked: plain paragraphs, or under
+100 words, or the verdict first.
 
-An output style is a Claude Code feature: a markdown file that replaces part of
-the system prompt, so a voice instruction lands in the same slot as Claude's own
-built-in styles instead of competing for attention in your context window. That
-is why it holds when a "be concise" line in CLAUDE.md stops working. Each of the
-eight here is built on a published writing method — the Minto Pyramid,
-ASD-STE100 controlled English, the Feynman technique — and credited to whoever
-wrote it down.
+An output style is a Claude Code feature: a markdown file that Claude Code loads
+into its system prompt, where it sets how Claude writes for the whole session.
+That is why it holds when a "be concise" line in CLAUDE.md stops working. Keep
+CLAUDE.md for your project's rules, and delete any tone lines from it so Claude
+is not told the same thing twice.
 
-[The styles](#the-styles) · [Install](#install) ·
-[Why this works](#why-this-works-when-a-claudemd-rule-doesnt) ·
-[How it's built](#how-this-library-is-built)
+A style changes prose and nothing else. It never changes which tools Claude
+runs, which edits it makes, or when it stops to ask you something. Code,
+commands, error messages, file paths and numbers come through exactly as
+written, and security warnings drop the style for plain, complete sentences.
+
+[The styles](#the-styles) · [Install](#install)
 
 ---
 
@@ -267,107 +267,33 @@ even shorter: three of the eight came back longer than the no-style answer.
 What changes is the shape the answer arrives in, and whether that shape is one
 you chose.
 
-Two things that table is honest about. `where-we-are` is the least reliable of
-the eight, producing its state line on roughly a third of runs, which is why
-its description says it *asks for* one. And `one-analogy` and
-`one-fact-per-sentence` each reverted to the default register on their first
-run and held on the second. Adherence is strong, not deterministic, which is
-what the optional [`--enforce`](#make-it-stick---enforce) hook exists for.
-[docs/examples.md](docs/examples.md) records the exact command, the version,
-the measurements, and a second `where-we-are` answer taken with work actually
-in flight.
-
-## Why this works when a CLAUDE.md rule doesn't
-
-If you have put "be concise, skip the preamble" in your CLAUDE.md and watched it
-hold for a few turns and then quietly stop mattering, rewording it will not help.
-The instruction is on the wrong layer.
-
-**CLAUDE.md is context.** It arrives alongside your files, your last twenty
-messages, and every tool result, all competing for the model's attention — and
-the competition gets worse as the session fills up.
-
-**An output style is the system prompt.** Claude Code injects it verbatim into
-the same slot that holds its own built-in styles — Explanatory, Learning,
-Proactive — so it reframes who the agent is rather than adding one more request
-to a crowded window.
-
-Your CLAUDE.md keeps working. A style sets voice; CLAUDE.md keeps carrying your
-project rules, conventions, and commands. If your CLAUDE.md already has tone
-instructions, you can delete those lines — otherwise Claude is being told the
-same thing twice, from two places.
-
-### What a style will not change
-
-A style changes prose and nothing else. Every one here sets
-`keep-coding-instructions: true`, so Claude Code's software-engineering
-instructions stay intact, and every one carries an explicit clause: it changes
-how an answer is written, never which tools run, which edits are made, or when
-Claude stops to ask you something.
-
-Code, commands, error messages, file paths, identifiers, and numbers are
-reproduced byte-for-byte, never stylized. For security warnings,
-destructive-action confirmations, and order-critical instructions, the styles
-drop their register and switch to full, plain sentences. The one exception is
-deliberate: `one-fact-per-sentence` stays on, because controlled aerospace
-English is already the clearest thing to read in exactly those moments.
-
-CI fails the build if any style stops carrying that guardrails block.
+These are real runs, not mock-ups. [docs/examples.md](docs/examples.md) records
+the command, the version, and how consistently each style held.
 
 ## The styles
 
-**If you install one, install `plain-prose`.** It fixes the default register
-without imposing a format, which makes it the one style that is safe to leave on
-permanently.
+**If you install one, install `plain-prose`.** It changes the voice without
+imposing a format, so it is the one that is safe to leave on permanently.
 
-What each one does is shown above, in its own words. Grouped here by the job
-you'd reach for it on, with the method behind it:
+**Everyday answers** — [`plain-prose`](output-styles/plain-prose.md),
+[`short-answers`](output-styles/short-answers.md).
 
-### Everyday answers
+**Work documents**, for answers that leave your terminal — a PR description, a
+status update, a message to someone who was not in the session —
+[`decision-brief`](output-styles/decision-brief.md),
+[`where-we-are`](output-styles/where-we-are.md).
 
-| Style | Method · author |
-|---|---|
-| [`plain-prose`](output-styles/plain-prose.md) | [Siqi Chen](https://github.com/blader/humanizer) · [Peter Yang](https://github.com/petergyang/no-ai-slop) · [Conor Bronsdon](https://github.com/conorbronsdon/avoid-ai-writing) · [Hardik Pandya](https://github.com/hardikpandya/stop-slop) · Joe Cotellese |
-| [`short-answers`](output-styles/short-answers.md) | [Julius Brussee](https://github.com/JuliusBrussee/caveman) · [Carlos Duplar Mello](https://github.com/carlosduplar/caveman-output-style-claude-code) |
+**Explaining something**, for unfamiliar code, onboarding, and any answer you
+need to understand rather than skim —
+[`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md),
+[`small-words`](output-styles/small-words.md),
+[`one-analogy`](output-styles/one-analogy.md),
+[`your-turn`](output-styles/your-turn.md).
 
-### Work documents
+`where-we-are` overlaps Claude Code's built-in `/recap`; [when you want
+both](docs/examples.md#when-you-want-this-and-recap-is-not-enough).
 
-For output that leaves your terminal — a PR description, a status update, a
-message to someone who was not in the session.
-
-| Style | Method · author |
-|---|---|
-| [`decision-brief`](output-styles/decision-brief.md) | Barbara Minto's [Pyramid Principle](https://www.barbaraminto.com/) · BLUF · [Sruthi Reddy](https://github.com/sruthir28/enterprise-ai-skills) · [Joe Cotellese](https://joecotellese.com) |
-| [`where-we-are`](output-styles/where-we-are.md) | [Ayoub Ghriss](https://github.com/ayghri/i-have-adhd) · Ramsay & Rostain (*The Adult ADHD Tool Kit*) |
-
-> [!NOTE]
-> **`where-we-are` overlaps a built-in, so check you need it.** Claude Code
-> ships [session recap](https://code.claude.com/docs/en/interactive-mode#session-recap):
-> a one-line summary of where the session stands, on by default, generated after
-> you have been away three minutes or so, and available on demand with `/recap`.
-> If you only want *"I stepped away, what was I doing"*, use that — it is real
-> code with real triggers rather than an instruction the model has to remember.
->
-> Reach for the style when you need what recap does not give you: the state on
-> **every** answer rather than after an absence, **inside the response text** so
-> it survives a paste into a PR or a handover note, and **outside the terminal**
-> — recap does not surface in the IDE extensions, and the docs state it is
-> always skipped in non-interactive mode, so `claude -p`, scripts, and CI never
-> see one. The two fail in different directions; running both is reasonable.
-
-### Explaining to someone
-
-For unfamiliar code, onboarding, and any answer you need to understand rather
-than skim.
-
-| Style | Method · author |
-|---|---|
-| [`one-fact-per-sentence`](output-styles/one-fact-per-sentence.md) | [ASD-STE100](https://www.asd-ste100.org/) (aerospace, 1983) · [Amin Boulegroun](https://github.com/AminBlg/SimpleEnglish) · [Matt Pocock](https://github.com/mattpocock/skills) |
-| [`small-words`](output-styles/small-words.md) | [Randall Munroe](https://xkcd.com/1133/) (xkcd, *Thing Explainer*) |
-| [`one-analogy`](output-styles/one-analogy.md) | IEEE ProComm · Reijnierse et al. (JCOM 2025) · CMU metaphor checklist |
-| [`your-turn`](output-styles/your-turn.md) | Richard Feynman's technique |
-
-Full attribution for every adapted method: [docs/CREDITS.md](docs/CREDITS.md).
+Who wrote the method behind each style: [docs/CREDITS.md](docs/CREDITS.md).
 
 ## Install
 
@@ -385,8 +311,7 @@ All eight plus the `style-maker` skill (activates nothing; pick later in `/confi
 curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.sh | bash -s -- --all
 ```
 
-Rather read it before running it? The installer is one file and works from a
-clone:
+Or clone it and run it yourself:
 
 ```bash
 git clone https://github.com/jase-perf/claude-output-style-library
@@ -395,8 +320,7 @@ cd claude-output-style-library && ./install.sh --all
 
 ### Windows (PowerShell)
 
-Windows has its own installer, [`install.ps1`](install.ps1) — the same commands,
-using only built-in PowerShell: no curl, no bash, no python.
+Windows uses [`install.ps1`](install.ps1) instead:
 
 ```powershell
 # One style, installed and activated
@@ -406,105 +330,55 @@ using only built-in PowerShell: no curl, no bash, no python.
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jase-perf/claude-output-style-library/main/install.ps1))) -All -Enforce
 ```
 
-From a local clone: `.\install.ps1 -All -Enforce`. Requires PowerShell 5.1
-(ships with Windows) or later; `pwsh` works too.
+From a local clone: `.\install.ps1 -All -Enforce`.
 
-> [!NOTE]
-> The `& ([scriptblock]::Create(...))` wrapper is how a remote script receives
-> arguments. Plain `irm ... | iex` runs too, but `iex` cannot forward
-> parameters — it will just print usage.
+### Restart, then pick
+
+> [!IMPORTANT]
+> **Nothing changes until you restart Claude Code, or run `/clear`.** A style is
+> read once, when the session starts.
+
+If you installed a single style, it is already active. If you installed all
+eight: `/config` → **Output style** → pick one. (`/output-style` was removed in
+Claude Code v2.1.91.)
+
+<p align="center">
+  <img src="docs/assets/Claude_Code_Config_Styles.gif" alt="Picking an output style: /config, then Output style, then choose from the list">
+</p>
+
+Everything is written under `~/.claude/`, and no project file is read or
+written. Both installers merge into `~/.claude/settings.json` rather than
+overwriting it, so re-running is safe. A style costs about 875 tokens once per
+session. To switch it off: `/config` → **Output style** → `Default`. To remove
+it, delete the file from `~/.claude/output-styles/`.
 
 <details>
-<summary><b>Flags, and why Windows has its own installer</b></summary>
+<summary><b>Installer flags, and the files written</b></summary>
 
 | `install.sh` | `install.ps1` | Effect |
 | --- | --- | --- |
 | `<name> [<name>…]` | `-Style <name> [<name>…]` | Install the named styles. A single one is also **activated**. |
 | `--all` | `-All` | Install all 8 plus the `style-maker` skill. Activates nothing. |
-| `--enforce` | `-Enforce` | Also install and register the per-turn reminder hook. |
+| `--enforce` | `-Enforce` | Also install the per-turn reminder hook. |
 | `--list` | `-List` | Print the available style names. |
-
-`install.sh` needs bash, and uses `python3` to edit `settings.json` when one is
-available. Both are unreliable on Windows:
-
-- **`bash` on PATH is normally WSL** (`C:\Windows\system32\bash.exe`), where
-  `$HOME` is `/home/<user>` — not `C:\Users\<user>`. The style files land in the
-  WSL filesystem, which Claude Code for Windows never reads, and the script
-  reports success.
-- **`python3` is normally a 0-byte Microsoft Store stub** that satisfies
-  `command -v` and then exits 9009. `install.sh` guards against this by checking
-  that `python3` actually runs, so it no longer dies there — but it falls back
-  to printing manual instructions instead of activating your style.
-
-[`install.ps1`](install.ps1) has neither dependency and edits `settings.json`
-through PowerShell's own JSON support.
-
-</details>
-
-### What it writes, and how to undo it
 
 ```
 ~/.claude/output-styles/<name>.md   the style file(s)
 ~/.claude/skills/style-maker/       only with --all or `style-maker`
 ~/.claude/hooks/style-reminder.*    only with --enforce
 ~/.claude/settings.json             edited only to activate a style or
-                                    register the hook
+                                    add the hook
 ```
 
-Nothing else is touched, and no project files are read or written. Both
-installers **merge** into `~/.claude/settings.json` rather than overwriting it,
-so existing hooks, permissions, and plugins survive; re-running is safe, and the
-hook registers once, not once per run. `install.ps1` also copies the file to
-`settings.json.bak` first.
-
-**To undo:** `/config` → **Output style** → `Default` switches it off
-immediately. To remove it entirely, delete the file from
-`~/.claude/output-styles/` and, if you used `--enforce`, the `UserPromptSubmit`
-entry in `~/.claude/settings.json`.
-
-**What it costs:** each style body is capped at 3500 characters — roughly 875
-tokens — added to the system prompt once per session. There is no per-turn cost
-unless you add `--enforce`, which is about 17 tokens a turn.
-
-### After install
-
-Nothing changes until Claude Code restarts (or you run `/clear`). If you
-installed a single style, that is all — it is already active. If you used
-`--all`, then: `/config` → **Output style** → pick one.
-
-<p align="center">
-  <img src="docs/assets/Claude_Code_Config_Styles.gif" alt="Picking an output style: /config, then Output style, then choose from the list">
-</p>
-
-> [!TIP]
-> The old `/output-style` command was removed in Claude Code v2.1.91 — most
-> guides online still mention it and are outdated. `/config` is the way.
+</details>
 
 ### Make it stick: `--enforce`
 
-A custom style is read once, at session start, so a long conversation can drift
-away from it. Append `--enforce` (bash) or `-Enforce` (PowerShell) to any
-install command above and a small `UserPromptSubmit` hook re-states the active
-style every turn, for about 17 tokens.
-
-The hook resolves your active style through the same settings precedence Claude
-Code uses — `settings.local.json`, then the project's `settings.json`, then
-`~/.claude/settings.json` — reading the project directory from its own stdin
-payload. It stays silent for built-in styles and for `default`, and every code
-path exits 0, so a missing or malformed settings file degrades to the next one
-down rather than breaking a turn. Details:
-[docs/enforce-hook.md](docs/enforce-hook.md).
-
-> [!NOTE]
-> **This ships opt-in because the evidence conflicts.** Claude Code's
-> [output styles docs](https://code.claude.com/docs/en/output-styles) say
-> "**All** output styles trigger reminders for Claude to adhere to the output
-> style instructions during the conversation," which would make the hook
-> redundant. Against that: reading the shipped binary shows the reminder
-> consumer looking up a built-ins-only table and returning nothing for a custom
-> style, and no such reminder has been observed in practice. We have not run a
-> controlled test, so we are not claiming the docs are wrong. Turn it on if you
-> notice your style fading.
+A style is read once per session, so a long conversation can drift back toward
+Claude's default voice. Add `--enforce` (bash) or `-Enforce` (PowerShell) to any
+command above, and a hook re-states your active style every turn for about 17
+tokens. Turn it on if you notice your style fading;
+[docs/enforce-hook.md](docs/enforce-hook.md) covers the rest.
 
 ## Make your own: style-maker
 
@@ -516,62 +390,10 @@ curl -fsSL https://raw.githubusercontent.com/jase-perf/claude-output-style-libra
 ```
 
 Then tell Claude **"make my output style"**. It asks ~10 questions (audience,
-length, jargon level, tone, samples of writing you like and hate), generates a
-style file following this repo's conventions — countable specs, positive
-framing, safety guardrails — shows you a live demo, and activates it.
+length, jargon level, tone, samples of writing you like and hate), writes the
+style file, shows you a live demo, and activates it.
 
-## How this library is built
-
-A style file is not documentation. Its body is injected verbatim into the system
-prompt, so every line it contains costs tokens and attention on every turn of
-every session it is active. A careless sentence in a README is noise; a careless
-sentence in a style file is a standing instruction.
-
-**The shared conventions** (full guide: [docs/format-guide.md](docs/format-guide.md)):
-specs rather than adjectives, because "no sentence over 20 words" is checkable
-and "be clear" is not; positive framing that describes the target voice;
-byte-exact guardrails; ceremony cut but never reasoning; and a 3500-character
-ceiling per style, because every byte is system prompt on every turn — a guard
-against bloat rather than a measured threshold.
-
-**Every style is machine-checked.** A style that quietly lost its security
-clause would install and behave exactly like a correct one.
-[`tests/check-styles.sh`](tests/check-styles.sh) is what notices:
-
-| The check | Why it exists |
-| --- | --- |
-| Guardrails name all four carve-outs | A style silently missing the destructive-action clause installs and runs like a correct one |
-| `## Rules` has its own heading | Otherwise the guardrails section runs on and the carve-out checks can be satisfied by rule text instead |
-| Body under 3500 characters | Growth should be deliberate; the number moves when a rule earns the room |
-| Frontmatter `name` slugifies to the filename | If they disagree, `install.sh <slug>` activates a style the user cannot find in `/config` |
-| No agent tool-call markup in the body | One style shipped with `</invoke>` as its last line and passed CI |
-| Every style is credited, and the README table matches what ships | Attribution and docs cannot rot silently |
-
-**Every style is adversarially reviewed.** Each one is reviewed by a second
-agent briefed to break it, not to approve it. Reviewers build a sandbox copy of
-the repo, run the suite in it, count the body themselves, and diff against the
-previous version for undeclared deletions; an approval without those artifacts
-does not count. That process caught a verify clause changed from "at most one
-concept per answer" to "exactly one" — which removes permission for a short
-factual reply and pushes every turn toward a mini-lecture — and a fabricated
-claim about React `useMemo` that would otherwise have entered the system prompt
-of every session.
-
-**Why it is eight styles and not nineteen**, why there are no banned-word lists,
-and what the research does and does not support:
-[docs/design-decisions.md](docs/design-decisions.md).
-
-**What is not claimed.** No benchmark shows these styles produce measurably
-better output than an unstyled Claude. The tests verify structure, the reviews
-verify craft, and the citations support specific design choices. None of that is
-an efficacy result, and calling it one would be the exact failure the
-`plain-prose` style exists to prevent.
-
-## The wider catalog
-
-Every method adapted here is credited to its author in
-[docs/CREDITS.md](docs/CREDITS.md), with links to the original projects — most
-of which are worth installing directly. Two more collections beyond those:
+## Other collections
 
 - [nattergabriel/claude-code-output-styles](https://github.com/nattergabriel/claude-code-output-styles)
   — 13 well-crafted styles (Socratic, Roast, Ship It…).
@@ -580,21 +402,16 @@ of which are worth installing directly. Two more collections beyond those:
 
 ## Contributing
 
-PRs welcome. One style per PR, following
-[docs/format-guide.md](docs/format-guide.md): built-in prompt structure
-(identity line, `Style Active` header), countable specs, positive framing, the
-shared guardrails block, one positive example, a verify clause, and credits in
-[docs/CREDITS.md](docs/CREDITS.md) rather than in the style body. Run the suite
-before you open it:
+One style per PR, following [docs/format-guide.md](docs/format-guide.md), with
+the method credited in [docs/CREDITS.md](docs/CREDITS.md). Run the suite before
+you open it:
 
 ```bash
 sh tests/check-styles.sh && sh tests/test-hook.sh && sh tests/test-install.sh
 ```
 
-CI runs the hook and installer suites on Ubuntu, macOS and Windows; the style
-invariants, `shellcheck`, PSScriptAnalyzer, and a check that no `.sh` file has
-acquired a CR run on Ubuntu. Checks that cannot run in an environment report
-`SKIP` with a reason rather than passing silently.
+Why there are eight styles and not nineteen, and how each one is checked:
+[docs/design-decisions.md](docs/design-decisions.md).
 
 If you're the original author of a methodology adapted here and want changes,
 open an issue; you outrank us.

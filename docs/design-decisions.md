@@ -135,3 +135,60 @@ reason: without it, a commit made on a Windows machine whose git has
 `core.autocrlf=false` ships `install.sh` with a CR in the shebang, and every
 macOS and Linux user gets `bad interpreter: /bin/sh^M`. CI checks for that on
 every push.
+
+### The other half of the Windows installer story
+
+`install.sh` needs bash, and uses `python3` to edit `settings.json` when one is
+available. Both are unreliable on Windows. The `python3` failure is described
+above. The other is quieter: `bash` on PATH is normally WSL
+(`C:\Windows\system32\bash.exe`), where `$HOME` is `/home/<user>`, not
+`C:\Users\<user>`. The style files land in the WSL filesystem, which Claude Code
+for Windows never reads, and the script reports success. `install.ps1` has
+neither dependency and edits `settings.json` through PowerShell's own JSON
+support, which is why Windows gets its own installer rather than a wrapper.
+
+### Why the PowerShell command is wrapped in a scriptblock
+
+The `& ([scriptblock]::Create(...))` wrapper is how a remote script receives
+arguments. Plain `irm ... | iex` runs too, but `iex` cannot forward parameters —
+it will just print usage.
+
+### What CI actually asserts about a style
+
+A style that quietly lost its security clause would install and behave exactly
+like a correct one. [`tests/check-styles.sh`](../tests/check-styles.sh) is what
+notices:
+
+| The check | Why it exists |
+| --- | --- |
+| Guardrails name all four carve-outs | A style silently missing the destructive-action clause installs and runs like a correct one |
+| `## Rules` has its own heading | Otherwise the guardrails section runs on and the carve-out checks can be satisfied by rule text instead |
+| Body under 3500 characters | Growth should be deliberate; the number moves when a rule earns the room |
+| Frontmatter `name` slugifies to the filename | If they disagree, `install.sh <slug>` activates a style the user cannot find in `/config` |
+| No agent tool-call markup in the body | One style shipped with `</invoke>` as its last line and passed CI |
+| Every style is credited, and the README table matches what ships | Attribution and docs cannot rot silently |
+
+CI runs the hook and installer suites on Ubuntu, macOS and Windows; the style
+invariants, `shellcheck`, PSScriptAnalyzer, and the carriage-return check run on
+Ubuntu. Checks that cannot run in an environment report `SKIP` with a reason
+rather than passing silently.
+
+### Every style is adversarially reviewed
+
+Each one is reviewed by a second agent briefed to break it, not to approve it.
+Reviewers build a sandbox copy of the repo, run the suite in it, count the body
+themselves, and diff against the previous version for undeclared deletions; an
+approval without those artifacts does not count. That process caught a verify
+clause changed from "at most one concept per answer" to "exactly one" — which
+removes permission for a short factual reply and pushes every turn toward a
+mini-lecture — and a fabricated claim about React `useMemo` that would otherwise
+have entered the system prompt of every session.
+
+### One style keeps its register during safety warnings
+
+Every style drops its register for security warnings, destructive-action
+confirmations, and order-critical instructions, and switches to full, plain
+sentences. `one-fact-per-sentence` is the deliberate exception: ASD-STE100
+controlled English is already the clearest thing to read in exactly those
+moments, so it stays on. `tests/check-styles.sh` fails the build if any style
+stops carrying the guardrails block.

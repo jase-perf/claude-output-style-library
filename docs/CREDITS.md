@@ -72,7 +72,8 @@ to a person: **Siqi Chen** (`@blader`), **Conor Bronsdon**
   [Pyramid Principle](https://www.barbaraminto.com/); BLUF (US military
   doctrine); consulting-skill formulations by
   [sruthir28/enterprise-ai-skills](https://github.com/sruthir28/enterprise-ai-skills)
-  (MIT) and Joe Cotellese's BLUF-for-Claude-Code writeup.
+  (MIT) and [Joe Cotellese](https://joecotellese.com)'s BLUF-for-Claude-Code
+  writeup.
 - *(removed August 2026)* **smart-brevity** adapted Smart Brevity by Jim
   VandeHei, Mike Allen and Roy Schwartz (Axios). Across four bake-off prompts
   it and `decision-brief` opened with the same claim, listed the same facts in
